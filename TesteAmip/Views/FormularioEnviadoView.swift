@@ -10,16 +10,15 @@ struct FormularioEnviadoView: View {
                 .font(.title2)
                 .bold()
                 .multilineTextAlignment(.center)
-
-            Button("Voltar à Home") {
-                presentationMode.wrappedValue.dismiss() // volta à Home
-            }
+            NavigationLink(destination: HomeView()) {
+            Text("Voltar à Home")
             .padding()
             .frame(maxWidth: .infinity)
             .background(Color.blue)
             .foregroundColor(.white)
             .cornerRadius(10)
             .padding(.horizontal)
+            }
 
             Spacer()
         }
