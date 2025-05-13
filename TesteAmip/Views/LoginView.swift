@@ -20,6 +20,7 @@ struct LoginView: View {
                         .scaledToFit()
                         .frame(width: 150, height: 150)
                         .padding(.bottom, 20)
+                        .offset(y:-70)
 
                     VStack(spacing: 20) {
                         Text("Login")
@@ -75,6 +76,7 @@ struct LoginView: View {
                     .cornerRadius(20)
                     .shadow(radius: 8)
                     .padding(.horizontal, 20)
+                    .offset(y:-70)
 
                     Spacer()
                 }
