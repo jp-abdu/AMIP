@@ -8,7 +8,7 @@ struct Question1View: View {
     @State private var aguaSelecionada = ""
     @State private var observacoes = ""
 
-    let ruas = ["Rua A", "Rua B", "Rua C"]
+    let ruas = ["Rua A", "Rua B", "Rua C", "rai"]
     let tiposDomicilio = [
         "DOMICÍLIO PARTICULAR PERMANENTEMENTE OCUPADO",
         "DOMICÍLIO PARTICULAR OCUPADO",
