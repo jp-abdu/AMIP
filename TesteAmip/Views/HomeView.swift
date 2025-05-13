@@ -17,7 +17,7 @@ struct HomeView: View {
 
                     // Textos de boas-vindas
                     Text("Olá! Seja muito bem-vindo(a)!")
-                        .font(.title)
+                        .font(.title2)
                         .bold()
                         .multilineTextAlignment(.center)
 
