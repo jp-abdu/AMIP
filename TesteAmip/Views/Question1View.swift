@@ -10,8 +10,7 @@ struct Question1View: View {
 
     let ruas = ["Rua A", "Rua B", "Rua C"]
     let tiposDomicilio = [
-        "DOMICÍLIO PARTICULAR PERMANENTEMENTE OCUPADO",
-        "DOMICÍLIO PARTICULAR OCUPADO",
+        "DOMICÍLIO PARTICULAR PERMANENTE OCUPADO",
         "DOMICÍLIO PARTICULAR IMPROVISADO OCUPADO",
         "DOMICÍLIO COLETIVO COM MORADOR"
     ]
@@ -31,70 +30,151 @@ struct Question1View: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                GroupBox(label: Text("IDENTIFICAÇÃO DE DOMICÍLIO").bold()) {
+                
+                // IDENTIFICAÇÃO DE DOMICÍLIO
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("IDENTIFICAÇÃO DE DOMICÍLIO:")
+                        .font(.headline)
+                        .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+
                     Picker("Rua", selection: $ruaSelecionada) {
                         ForEach(ruas, id: \.self) { rua in
                             Text(rua)
                         }
                     }
                     .pickerStyle(MenuPickerStyle())
+                    .padding(8)
+                    .background(Color.white)
+                    .cornerRadius(8)
 
                     TextField("Número", text: $numero)
                         .keyboardType(.numberPad)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(8)
+                        .background(Color.white)
+                        .cornerRadius(8)
                 }
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color(red: 218/255, green: 249/255, blue: 254/255))
+                .cornerRadius(20)
 
-                GroupBox(label: Text("ESPÉCIE DE DOMICÍLIO OCUPADO").bold()) {
+                // ESPÉCIE DE DOMICÍLIO
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("ESPÉCIE DE DOMICÍLIO OCUPADO:")
+                        .font(.headline)
+                        .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+
                     ForEach(tiposDomicilio, id: \.self) { tipo in
-                        HStack {
+                        HStack(spacing: 12) {
+                            ZStack {
+                                Circle()
+                                    .stroke(Color.black, lineWidth: 1)
+                                    .frame(width: 20, height: 20)
+                                if tipoSelecionado == tipo {
+                                    Circle()
+                                        .fill(Color.blue)
+                                        .frame(width: 10, height: 10)
+                                }
+                            }
+
                             Text(tipo)
-                            Spacer()
-                            Image(systemName: tipoSelecionado == tipo ? "checkmark.circle.fill" : "circle")
-                                .foregroundColor(tipoSelecionado == tipo ? .blue : .gray)
+                                .foregroundColor(.black)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
-                        .contentShape(Rectangle())
                         .onTapGesture {
                             tipoSelecionado = tipo
                         }
                     }
                 }
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color(red: 218/255, green: 249/255, blue: 254/255))
+                .cornerRadius(20)
 
-                GroupBox(label: Text("FORMA DE COLETA DO LIXO").bold()) {
+                // COLETA DE LIXO
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("FORMA DE COLETA DO LIXO:")
+                        .font(.headline)
+                        .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+
                     ForEach(opcoesColetaLixo, id: \.self) { opcao in
-                        HStack {
+                        HStack(spacing: 12) {
+                            ZStack {
+                                Circle()
+                                    .stroke(Color.black, lineWidth: 1)
+                                    .frame(width: 20, height: 20)
+                                if coletaSelecionada == opcao {
+                                    Circle()
+                                        .fill(Color.blue)
+                                        .frame(width: 10, height: 10)
+                                }
+                            }
+
                             Text(opcao)
-                            Spacer()
-                            Image(systemName: coletaSelecionada == opcao ? "checkmark.circle.fill" : "circle")
-                                .foregroundColor(coletaSelecionada == opcao ? .blue : .gray)
+                                .foregroundColor(.black)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
-                        .contentShape(Rectangle())
                         .onTapGesture {
                             coletaSelecionada = opcao
                         }
                     }
                 }
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color(red: 218/255, green: 249/255, blue: 254/255))
+                .cornerRadius(20)
 
-                GroupBox(label: Text("ABASTECIMENTO DE ÁGUA").bold()) {
+                // ABASTECIMENTO DE ÁGUA
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("ABASTECIMENTO DE ÁGUA:")
+                        .font(.headline)
+                        .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+
                     ForEach(opcoesAgua, id: \.self) { opcao in
-                        HStack {
+                        HStack(spacing: 12) {
+                            ZStack {
+                                Circle()
+                                    .stroke(Color.black, lineWidth: 1)
+                                    .frame(width: 20, height: 20)
+                                if aguaSelecionada == opcao {
+                                    Circle()
+                                        .fill(Color.blue)
+                                        .frame(width: 10, height: 10)
+                                }
+                            }
+
                             Text(opcao)
-                            Spacer()
-                            Image(systemName: aguaSelecionada == opcao ? "checkmark.circle.fill" : "circle")
-                                .foregroundColor(aguaSelecionada == opcao ? .blue : .gray)
+                                .foregroundColor(.black)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
-                        .contentShape(Rectangle())
                         .onTapGesture {
                             aguaSelecionada = opcao
                         }
                     }
                 }
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color(red: 218/255, green: 249/255, blue: 254/255))
+                .cornerRadius(20)
 
-                GroupBox(label: Text("OBSERVAÇÕES ADICIONAIS").bold()) {
+                // OBSERVAÇÕES
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("OBSERVAÇÕES ADICIONAIS:")
+                        .font(.headline)
+                        .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+
                     TextEditor(text: $observacoes)
                         .frame(height: 100)
-                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.5)))
+                        .padding(8)
+                        .background(Color.white)
+                        .cornerRadius(8)
                 }
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color(red: 218/255, green: 249/255, blue: 254/255))
+                .cornerRadius(20)
 
+                // BOTÃO
                 NavigationLink(destination: FormularioEnviadoView()) {
                     Text("Concluir")
                         .frame(maxWidth: .infinity)
