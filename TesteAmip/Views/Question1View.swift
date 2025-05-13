@@ -73,7 +73,7 @@ struct Question1View: View {
                                 if tipoSelecionado == tipo {
                                     Circle()
                                         .fill(Color.blue)
-                                        .frame(width: 10, height: 10)
+                                        .frame(width: 15, height: 15)
                                 }
                             }
 
@@ -175,8 +175,8 @@ struct Question1View: View {
                 .cornerRadius(20)
 
                 // BOTÃO
-                NavigationLink(destination: FormularioEnviadoView()) {
-                    Text("Concluir")
+                NavigationLink(destination: Question2View()) {
+                    Text("Proximo")
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(Color.green)
