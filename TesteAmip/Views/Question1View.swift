@@ -73,7 +73,7 @@ struct Question1View: View {
                                 if tipoSelecionado == tipo {
                                     Circle()
                                         .fill(Color.blue)
-                                        .frame(width: 15, height: 15)
+                                        .frame(width: 10, height: 10)
                                 }
                             }
 
@@ -81,6 +81,7 @@ struct Question1View: View {
                                 .foregroundColor(.black)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
+                        .contentShape(Rectangle()) // Torna toda a linha clicável
                         .onTapGesture {
                             tipoSelecionado = tipo
                         }
@@ -114,6 +115,7 @@ struct Question1View: View {
                                 .foregroundColor(.black)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
+                        .contentShape(Rectangle()) // Torna toda a linha clicável
                         .onTapGesture {
                             coletaSelecionada = opcao
                         }
@@ -147,6 +149,7 @@ struct Question1View: View {
                                 .foregroundColor(.black)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
+                        .contentShape(Rectangle()) // Torna toda a linha clicável
                         .onTapGesture {
                             aguaSelecionada = opcao
                         }
@@ -175,8 +178,8 @@ struct Question1View: View {
                 .cornerRadius(20)
 
                 // BOTÃO
-                NavigationLink(destination: Question2View()) {
-                    Text("Proximo")
+                NavigationLink(destination: FormularioEnviadoView()) {
+                    Text("Concluir")
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(Color.green)
