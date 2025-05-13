@@ -7,13 +7,18 @@ struct HomeView: View {
                 Color.white
                     .ignoresSafeArea()
 
-                VStack(spacing: 20) {
-                    // Logo mais para o topo
-                    Image("amip_logo")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 150, height: 150)
-                        .padding(.top, 20) // Reduzi o padding para subir a logo
+                VStack(spacing: 12) {
+                    // Logo fixa no topo da tela
+                    VStack {
+                        Image("amip_logo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 180, height: 180)
+                            .padding(.top, 10)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .top) // Garantindo que a logo fique no topo
+
+                    Spacer()
 
                     // Textos de boas-vindas
                     Text("Olá! Seja muito bem-vindo(a)!")
@@ -24,8 +29,6 @@ struct HomeView: View {
                     Text("Abaixo você pode encontrar o questionário:")
                         .font(.subheadline)
                         .foregroundColor(.gray)
-
-                    Spacer() // Para centralizar a caixa
 
                     // Caixa centralizada com borda
                     VStack {
@@ -68,9 +71,8 @@ struct HomeView: View {
                     )
                     .padding(.horizontal, 20)
 
-                    Spacer() // Para manter a centralização da caixa
+                    Spacer()
                 }
-                .padding(.vertical, 20) // Ajuste geral para manter a organização
             }
         }
     }
