@@ -1,43 +1,174 @@
-//
-//  Question2View.swift
-//  TesteAmip
-//
-//  Created by ANDRE LUIZ MENDES DO NASCIMENTO RIBEIRO on 20/05/25.
-//
-
 import SwiftUI
 
 struct Question6View: View {
-    // aqui você deve declarar os @State necessários para as respostas desta tela
-    @State private var respostaExemplo = ""
-    
+    @State private var trabalhouRemunerado = ""
+    @State private var quantidadeTrabalhos = ""
+    @State private var ocupacao = ""
+    @State private var atividadePrincipal = ""
+    @State private var carteiraAssinada = ""
+    @State private var possuiCNPJ = ""
+    @State private var faixaRendimento = ""
+
+    let opcoesSimNao = ["Sim", "Não"]
+    let opcoesQuantidadeTrabalhos = ["1", "2", "3 ou mais"]
+    let faixasDeRendimento = [
+        "1,00 a 500,00",
+        "501,00 a 1.000,00",
+        "1.001,00 a 2.000,00",
+        "2.001,00 a 3.000,00",
+        "3.001,00 a 5.000,00",
+        "5.001,00 a 10.000,00",
+        "10.001,00 a 20.000,00",
+        "20.001,00 a 100.000,00",
+        "100.001 ou mais"
+    ]
+
     var body: some View {
-        VStack(spacing: 20) {
-            Text("PERGUNTA 6")
+        ScrollView {
+            VStack(spacing: 20) {
+                Text("6. TRABALHO E RENDIMENTO")
+                    .font(.system(size: 23))
+                    .bold()
+                    .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, 7.5)
+
+                // Pergunta 1
+                FormSectionView(title: "TRABALHOU OU ESTAGIOU EM ALGUMA ATIVIDADE REMUNERADA EM DINHEIRO?") {
+                    RadioGroupView(options: opcoesSimNao, selected: $trabalhouRemunerado)
+                }
+
+                // Pergunta 2
+                FormSectionView(title: "QUANTOS TRABALHOS TINHA NOS ÚLTIMOS MESES?") {
+                    RadioGroupView(options: opcoesQuantidadeTrabalhos, selected: $quantidadeTrabalhos)
+                }
+
+                // Pergunta 3
+                FormSectionView(title: "QUAL ERA A OCUPAÇÃO, CARGO OU FUNÇÃO QUE TINHA NESSE TRABALHO?") {
+                    LabeledTextFieldView(title: "Ex: CEO, Funcionário, etc...", text: $ocupacao)
+                }
+
+                // Pergunta 4
+                FormSectionView(title: "QUAL ERA A PRINCIPAL ATIVIDADE DO NEGÓCIO OU EMPRESA EM QUE TINHA ESSE TRABALHO?") {
+                    LabeledTextFieldView(title: "Ex: Vendas, Gerenciamento, etc...", text: $atividadePrincipal)
+                }
+
+                // Pergunta 5
+                FormSectionView(title: "NESSE TRABALHO TINHA CARTEIRA DE TRABALHO ASSINADA?") {
+                    RadioGroupView(options: opcoesSimNao, selected: $carteiraAssinada)
+                }
+
+                // Pergunta 6
+                FormSectionView(title: "ESSE NEGÓCIO OU EMPRESA ERA REGISTRADO NO CADASTRO NACIONAL DE PESSOA JURÍDICA - CNPJ?") {
+                    RadioGroupView(options: opcoesSimNao, selected: $possuiCNPJ)
+                }
+
+                // Pergunta 7
+                FormSectionView(title: "FAIXA DE RENDIMENTO") {
+                    RadioGroupView(options: faixasDeRendimento, selected: $faixaRendimento)
+                }
+
+                // Botão de próxima
+                FormNavigationButton(label: "Próxima", destination: Text("Próxima página"))
+            }
+            .padding()
+        }
+    }
+}
+struct FormSectionView<Content: View>: View {
+    let title: String
+    let content: Content
+
+    init(title: String, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.content = content()
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(title)
                 .font(.headline)
                 .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
-            
-            // Exemplo de campo de resposta
-            TextField("Digite sua resposta", text: $respostaExemplo)
+
+            content
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(red: 218/255, green: 249/255, blue: 254/255))
+        .cornerRadius(20)
+    }
+}
+struct FormNavigationButton<Destination: View>: View {
+    let label: String
+    let destination: Destination
+
+    var body: some View {
+        NavigationLink(destination: destination) {
+            Text(label)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color(red: 0/255, green: 107/255, blue: 140/255))
+                .foregroundColor(.white)
+                .cornerRadius(10)
+        }
+        .padding(.top)
+    }
+}
+
+struct LabeledTextFieldView: View {
+    let title: String
+    @Binding var text: String
+    var keyboardType: UIKeyboardType = .default
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.subheadline)
+
+            TextField("", text: $text)
+                .keyboardType(keyboardType)
                 .padding(8)
                 .background(Color.white)
                 .cornerRadius(8)
-            
-            Spacer()
-            
-            // BOTÃO DE NAVEGAÇÃO PARA A PRÓXIMA TELA
-            NavigationLink(destination: Question7View()) {
-                Text("Próxima")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
-            .padding(.horizontal)
         }
-        .padding()
-        .navigationTitle("Pergunta 6")
+    }
+}
+
+struct RadioGroupView: View {
+    let options: [String]
+    @Binding var selected: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            ForEach(options, id: \.self) { option in
+                HStack(spacing: 12) {
+                    ZStack {
+                        Circle()
+                            .fill(Color.white)
+                            .frame(width: 25, height: 25)
+                            .overlay(
+                                Circle()
+                                    .stroke(Color.black, lineWidth: 1)
+                            )
+
+                        if selected == option {
+                            Circle()
+                                .fill(Color.blue)
+                                .frame(width: 10, height: 10)
+                        }
+                    }
+
+                    Text(option)
+                        .foregroundColor(.black)
+                        .font(.system(size: 17))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    selected = option
+                }
+            }
+        }
     }
 }
 
