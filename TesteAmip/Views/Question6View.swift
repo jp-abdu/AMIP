@@ -69,7 +69,7 @@ struct Question6View: View {
                 }
 
                 // Botão de próxima
-                FormNavigationButton(label: "Próxima", destination: Text("Próxima página"))
+                FormNavigationButtonsRow(backDestination: Question5View(),nextDestination: Question7View())
             }
             .padding()
         }
@@ -98,22 +98,55 @@ struct FormSectionView<Content: View>: View {
         .cornerRadius(20)
     }
 }
-struct FormNavigationButton<Destination: View>: View {
-    let label: String
-    let destination: Destination
+import SwiftUI
+
+struct FormNavigationButtonsRow<BackDestination: View, NextDestination: View>: View {
+    let backLabel: String
+    let nextLabel: String
+    let backDestination: BackDestination
+    let nextDestination: NextDestination
+
+    init(
+        backLabel: String = "Voltar",
+        nextLabel: String = "Próxima",
+        backDestination: BackDestination,
+        nextDestination: NextDestination
+    ) {
+        self.backLabel = backLabel
+        self.nextLabel = nextLabel
+        self.backDestination = backDestination
+        self.nextDestination = nextDestination
+    }
 
     var body: some View {
-        NavigationLink(destination: destination) {
-            Text(label)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color(red: 0/255, green: 107/255, blue: 140/255))
-                .foregroundColor(.white)
-                .cornerRadius(10)
+        HStack(spacing: 10) {
+            // Botão Voltar
+            NavigationLink(destination: backDestination) {
+                Text(backLabel)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .foregroundColor(Color(red: 0/255, green: 104/255, blue: 150/255))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color(red: 0/255, green: 104/255, blue: 150/255), lineWidth: 1.8)
+                    )
+                    .cornerRadius(10)
+            }
+
+            // Botão Próxima
+            NavigationLink(destination: nextDestination) {
+                Text(nextLabel)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color(red: 0/255, green: 107/255, blue: 140/255))
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            }
         }
         .padding(.top)
     }
 }
+
 
 struct LabeledTextFieldView: View {
     let title: String
