@@ -3,31 +3,41 @@ import SwiftUI
 struct Question1View: View {
     @State private var ruaSelecionada = ""
     @State private var numero = ""
+    @State private var complemento = ""
     @State private var tipoSelecionado = ""
     @State private var coletaSelecionada = ""
     @State private var aguaSelecionada = ""
     @State private var observacoes = ""
 
-    let ruas = ["Selecione sua Rua", "- R. Marina do Sol", "- R. Marina do Frade","- R. Marina dos Coqueiros","- R. Marina da Lua","- R. Marina do Bosque", "- R. Marina Porto Bali","- R. Marina das Flores","- R. Marina das Estrelas","- R. Marina Ponta Leste"]
+    let ruas = ["Selecione a Rua", "R. Marina do Sol", "R. Marina do Frade","R. Marina dos Coqueiros","R. Marina da Lua","R. Marina do Bosque", "R. Marina Porto Bali","R. Marina das Flores","R. Marina das Estrelas","R. Marina Ponta Leste"]
     let especieDomicilio = [
-        "DOMICÍLIO PARTICULAR PERMANENTE OCUPADO",
-        "DOMICÍLIO PARTICULAR IMPROVISADO OCUPADO",
-        "DOMICÍLIO COLETIVO COM MORADOR"
+        "Domicílio particular permanente ocupado",
+        "Domicílio particular improvisado ocupado",
+        "Domicílio coletivo com morador"
     ]
     let tipoDomicilio = [
-        "CASA",
-        "CASA DE VILA OU CONDOMÍNIO",
-        "HABITAÇÃO EM CASA DE CÔMODOS OU CORTIÇO",
-        "ESTRUTURA RESIDENCIAL PERMANENTE DEGRADADA OU INACABADA",
-        "ASILO OU OUTRA INSTITUIÇÃO DE PERMANÊNCIA PARA IDOSOS",
-        "HOTEL OU PENSÃO",
-        "ALOJAMENTO",
-        "OUTROS"
+        "Casa",
+        "Casa de vila ou condomínio",
+        "Habitação em casa de comodos ou cortiço",
+        "Estrutura residencial permanente degradada ou inacabada",
+        "Asilo ou outra instituição de permanência para idosos",
+        "Hotel ou pensão",
+        "Alojamento",
+        "Outros"
     ]
 
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
+                
+                    Text("1. IDENTIFICAÇÃO DE DOMICÍLIO:")
+                        .font(.system(size: 23))
+                        .bold()
+                        .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 7.5)
+                            
+
                 
                 // IDENTIFICAÇÃO DE DOMICÍLIO
                 VStack(alignment: .leading, spacing: 16) {
@@ -35,7 +45,7 @@ struct Question1View: View {
                         .font(.headline)
                         .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
 
-                    Picker("Rua", selection: $ruaSelecionada) {
+                    Picker("Selecione a rua", selection: $ruaSelecionada) {
                         ForEach(ruas, id: \.self) { rua in
                             Text(rua)
                         }
@@ -46,6 +56,12 @@ struct Question1View: View {
                     .cornerRadius(8)
 
                     TextField("Número", text: $numero)
+                        .keyboardType(.numberPad)
+                        .padding(8)
+                        .background(Color.white)
+                        .cornerRadius(8)
+                    
+                    TextField("Complemento", text: $complemento)
                         .keyboardType(.numberPad)
                         .padding(8)
                         .background(Color.white)
@@ -67,7 +83,7 @@ struct Question1View: View {
                             ZStack {
                                 Circle()
                                     .fill(Color.white)
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .overlay(
                                         Circle()
                                             .stroke(Color.black, lineWidth: 1)
@@ -84,6 +100,7 @@ struct Question1View: View {
                             Text(tipo)
                                 .foregroundColor(.black)
                                 .fixedSize(horizontal: false, vertical: true)
+                                .font(.system(size: 17))
                         }
                         .contentShape(Rectangle()) // Torna toda a linha clicável
                         .onTapGesture {
@@ -107,7 +124,7 @@ struct Question1View: View {
                             ZStack {
                                 Circle()
                                     .fill(Color.white)
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                                     .overlay(
                                         Circle()
                                             .stroke(Color.black, lineWidth: 1)
@@ -124,6 +141,8 @@ struct Question1View: View {
                             Text(tipo)
                                 .foregroundColor(.black)
                                 .fixedSize(horizontal: false, vertical: true)
+                                .font(.system(size: 17))
+
                         }
                         .contentShape(Rectangle()) // Torna toda a linha clicável
                         .onTapGesture {
@@ -151,6 +170,13 @@ struct Question1View: View {
             }
             .padding()
         }
-        .navigationTitle("Pergunta 1")
+    
+    }
+}
+struct Question1View_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            Question1View()
+        }
     }
 }
