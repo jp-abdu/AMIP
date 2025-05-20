@@ -29,6 +29,8 @@
 		C10DDACD2DCA9D4B003AC6FE /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10DDACC2DCA9D4B003AC6FE /* HomeView.swift */; };
 		C10DDACF2DCA9D60003AC6FE /* Question1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10DDACE2DCA9D60003AC6FE /* Question1View.swift */; };
 		C10DDAD22DCAA0D2003AC6FE /* FormularioEnviadoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10DDAD12DCAA0D2003AC6FE /* FormularioEnviadoView.swift */; };
+		CD2B9CC12DDD1E51005CDA8C /* FromNavigationButtonsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2B9CC02DDD1E51005CDA8C /* FromNavigationButtonsRow.swift */; };
+		CD2B9CC32DDD1FAA005CDA8C /* outrosStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2B9CC22DDD1FAA005CDA8C /* outrosStructs.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +76,8 @@
 		C10DDACC2DCA9D4B003AC6FE /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		C10DDACE2DCA9D60003AC6FE /* Question1View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question1View.swift; sourceTree = "<group>"; };
 		C10DDAD12DCAA0D2003AC6FE /* FormularioEnviadoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormularioEnviadoView.swift; sourceTree = "<group>"; };
+		CD2B9CC02DDD1E51005CDA8C /* FromNavigationButtonsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FromNavigationButtonsRow.swift; sourceTree = "<group>"; };
+		CD2B9CC22DDD1FAA005CDA8C /* outrosStructs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = outrosStructs.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +128,7 @@
 		C10DDA9C2DCA9C4C003AC6FE /* TesteAmip */ = {
 			isa = PBXGroup;
 			children = (
+				CD2B9CBF2DDD1E32005CDA8C /* Structs */,
 				C10DDAD02DCA9D7F003AC6FE /* Models */,
 				C10DDA9D2DCA9C4C003AC6FE /* TesteAmipApp.swift */,
 				C10DDAA12DCA9C4F003AC6FE /* Assets.xcassets */,
@@ -186,6 +191,15 @@
 			children = (
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		CD2B9CBF2DDD1E32005CDA8C /* Structs */ = {
+			isa = PBXGroup;
+			children = (
+				CD2B9CC02DDD1E51005CDA8C /* FromNavigationButtonsRow.swift */,
+				CD2B9CC22DDD1FAA005CDA8C /* outrosStructs.swift */,
+			);
+			path = Structs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -326,10 +340,12 @@
 				51B329B62DDCEE28001F0726 /* Question11View.swift in Sources */,
 				51B329AA2DDCEDE5001F0726 /* Question5View.swift in Sources */,
 				51B329B42DDCEE1D001F0726 /* Question10View.swift in Sources */,
+				CD2B9CC32DDD1FAA005CDA8C /* outrosStructs.swift in Sources */,
 				51B329A42DDCEB3F001F0726 /* Question2View.swift in Sources */,
 				C10DDA9E2DCA9C4C003AC6FE /* TesteAmipApp.swift in Sources */,
 				51B329A62DDCED55001F0726 /* Question3View.swift in Sources */,
 				51B329A82DDCEDCF001F0726 /* Question4View.swift in Sources */,
+				CD2B9CC12DDD1E51005CDA8C /* FromNavigationButtonsRow.swift in Sources */,
 				51B329B02DDCEE08001F0726 /* Question8View.swift in Sources */,
 				51B329AE2DDCEDFD001F0726 /* Question7View.swift in Sources */,
 				C10DDACB2DCA9D3D003AC6FE /* LoginView.swift in Sources */,
