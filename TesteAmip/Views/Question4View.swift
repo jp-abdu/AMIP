@@ -37,7 +37,7 @@ struct Question4View: View {
             .padding(.horizontal)
         }
         .padding()
-        .navigationTitle("Pergunta 2")
+        .navigationTitle("Pergunta 4")
     }
 }
 
