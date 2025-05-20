@@ -8,23 +8,21 @@ struct Question1View: View {
     @State private var aguaSelecionada = ""
     @State private var observacoes = ""
 
-    let ruas = ["Rua A", "Rua B", "Rua C"]
-    let tiposDomicilio = [
+    let ruas = ["Selecione sua Rua", "- R. Marina do Sol", "- R. Marina do Frade","- R. Marina dos Coqueiros","- R. Marina da Lua","- R. Marina do Bosque", "- R. Marina Porto Bali","- R. Marina das Flores","- R. Marina das Estrelas","- R. Marina Ponta Leste"]
+    let especieDomicilio = [
         "DOMICÍLIO PARTICULAR PERMANENTE OCUPADO",
         "DOMICÍLIO PARTICULAR IMPROVISADO OCUPADO",
         "DOMICÍLIO COLETIVO COM MORADOR"
     ]
-    let opcoesColetaLixo = [
-        "Recolhido por serviço público",
-        "Enterrado no terreno",
-        "Queimado",
-        "Jogado em terreno baldio"
-    ]
-    let opcoesAgua = [
-        "Rede geral",
-        "Poço artesiano",
-        "Cisterna",
-        "Outra"
+    let tipoDomicilio = [
+        "CASA",
+        "CASA DE VILA OU CONDOMÍNIO",
+        "HABITAÇÃO EM CASA DE CÔMODOS OU CORTIÇO",
+        "ESTRUTURA RESIDENCIAL PERMANENTE DEGRADADA OU INACABADA",
+        "ASILO OU OUTRA INSTITUIÇÃO DE PERMANÊNCIA PARA IDOSOS",
+        "HOTEL OU PENSÃO",
+        "ALOJAMENTO",
+        "OUTROS"
     ]
 
     var body: some View {
@@ -64,18 +62,24 @@ struct Question1View: View {
                         .font(.headline)
                         .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
 
-                    ForEach(tiposDomicilio, id: \.self) { tipo in
+                    ForEach(especieDomicilio, id: \.self) { tipo in
                         HStack(spacing: 12) {
                             ZStack {
                                 Circle()
-                                    .stroke(Color.black, lineWidth: 1)
+                                    .fill(Color.white)
                                     .frame(width: 20, height: 20)
+                                    .overlay(
+                                        Circle()
+                                            .stroke(Color.black, lineWidth: 1)
+                                    )
+                                
                                 if tipoSelecionado == tipo {
                                     Circle()
                                         .fill(Color.blue)
                                         .frame(width: 10, height: 10)
                                 }
                             }
+
 
                             Text(tipo)
                                 .foregroundColor(.black)
@@ -92,32 +96,38 @@ struct Question1View: View {
                 .background(Color(red: 218/255, green: 249/255, blue: 254/255))
                 .cornerRadius(20)
 
-                // COLETA DE LIXO
+                // ESPÉCIE DE DOMICÍLIO
                 VStack(alignment: .leading, spacing: 16) {
-                    Text("FORMA DE COLETA DO LIXO:")
+                    Text("TIPO DE DOMICÍLIO")
                         .font(.headline)
                         .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
 
-                    ForEach(opcoesColetaLixo, id: \.self) { opcao in
+                    ForEach(tipoDomicilio, id: \.self) { tipo in
                         HStack(spacing: 12) {
                             ZStack {
                                 Circle()
-                                    .stroke(Color.black, lineWidth: 1)
+                                    .fill(Color.white)
                                     .frame(width: 20, height: 20)
-                                if coletaSelecionada == opcao {
+                                    .overlay(
+                                        Circle()
+                                            .stroke(Color.black, lineWidth: 1)
+                                    )
+                                
+                                if tipoSelecionado == tipo {
                                     Circle()
                                         .fill(Color.blue)
                                         .frame(width: 10, height: 10)
                                 }
                             }
 
-                            Text(opcao)
+
+                            Text(tipo)
                                 .foregroundColor(.black)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                         .contentShape(Rectangle()) // Torna toda a linha clicável
                         .onTapGesture {
-                            coletaSelecionada = opcao
+                            tipoSelecionado = tipo
                         }
                     }
                 }
@@ -127,62 +137,13 @@ struct Question1View: View {
                 .cornerRadius(20)
 
                 // ABASTECIMENTO DE ÁGUA
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("ABASTECIMENTO DE ÁGUA:")
-                        .font(.headline)
-                        .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
-
-                    ForEach(opcoesAgua, id: \.self) { opcao in
-                        HStack(spacing: 12) {
-                            ZStack {
-                                Circle()
-                                    .stroke(Color.black, lineWidth: 1)
-                                    .frame(width: 20, height: 20)
-                                if aguaSelecionada == opcao {
-                                    Circle()
-                                        .fill(Color.blue)
-                                        .frame(width: 10, height: 10)
-                                }
-                            }
-
-                            Text(opcao)
-                                .foregroundColor(.black)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                        .contentShape(Rectangle()) // Torna toda a linha clicável
-                        .onTapGesture {
-                            aguaSelecionada = opcao
-                        }
-                    }
-                }
-                .padding()
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color(red: 218/255, green: 249/255, blue: 254/255))
-                .cornerRadius(20)
-
-                // OBSERVAÇÕES
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("OBSERVAÇÕES ADICIONAIS:")
-                        .font(.headline)
-                        .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
-
-                    TextEditor(text: $observacoes)
-                        .frame(height: 100)
-                        .padding(8)
-                        .background(Color.white)
-                        .cornerRadius(8)
-                }
-                .padding()
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color(red: 218/255, green: 249/255, blue: 254/255))
-                .cornerRadius(20)
 
                 // BOTÃO
                 NavigationLink(destination: Question2View()) {
                     Text("Próxima")
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.green)
+                        .background(Color(red: 0/255, green: 107/255, blue: 140/255))
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
@@ -190,6 +151,6 @@ struct Question1View: View {
             }
             .padding()
         }
-        .navigationTitle("Questionário")
+        .navigationTitle("Pergunta 1")
     }
 }
