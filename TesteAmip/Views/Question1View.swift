@@ -178,8 +178,8 @@ struct Question1View: View {
                 .cornerRadius(20)
 
                 // BOTÃO
-                NavigationLink(destination: FormularioEnviadoView()) {
-                    Text("Concluir")
+                NavigationLink(destination: Question2View()) {
+                    Text("Próxima")
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(Color.green)

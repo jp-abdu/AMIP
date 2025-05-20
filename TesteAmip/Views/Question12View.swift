@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct Question2View: View {
+struct Question12View: View {
     // aqui você deve declarar os @State necessários para as respostas desta tela
     @State private var respostaExemplo = ""
     
     var body: some View {
         VStack(spacing: 20) {
-            Text("PERGUNTA 2")
+            Text("PERGUNTA 12")
                 .font(.headline)
                 .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
             
@@ -26,7 +26,7 @@ struct Question2View: View {
             Spacer()
             
             // BOTÃO DE NAVEGAÇÃO PARA A PRÓXIMA TELA
-            NavigationLink(destination: Question3View()) {
+            NavigationLink(destination: FormularioEnviadoView()) {
                 Text("Próxima")
                     .frame(maxWidth: .infinity)
                     .padding()
@@ -37,15 +37,14 @@ struct Question2View: View {
             .padding(.horizontal)
         }
         .padding()
-        .navigationTitle("Pergunta 2")
+        .navigationTitle("Pergunta 12")
     }
 }
 
-struct Question2View_Previews: PreviewProvider {
+struct Question12View_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            Question2View()
+            Question12View()
         }
     }
 }
-
