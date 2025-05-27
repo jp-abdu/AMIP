@@ -3,7 +3,9 @@ import SwiftUI
 struct Question2View: View {
     @State private var numeroMoradores = ""
     @State private var nomeCompleto = ""
-    @State private var dataNascimento = Date() // Agora é Date
+    @State private var dataNascimento = Date()
+    @State private var dataNascimentoSelecionada = false
+    @State private var mostrandoSelecaoData = false
     @State private var sexoSelecionado = ""
     @State private var parentescoSelecionado = ""
     @State private var situacaoDomicilioSelecionada = ""
@@ -38,7 +40,6 @@ struct Question2View: View {
         "Outra forma"
     ]
     
-    // DateFormatter para exibir a data formatada se precisar mostrar como texto
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM/yyyy"
@@ -78,17 +79,56 @@ struct Question2View: View {
                         
                         LabeledTextFieldViews(title: "Nome Completo", text: $nomeCompleto)
                         
-                        // --------- ALTERAÇÃO PRINCIPAL ---------
-                        DatePicker(
-                            "Data de Nascimento",
-                            selection: $dataNascimento,
-                            displayedComponents: .date
-                        )
-                        .datePickerStyle(.compact) // ou .wheel se preferir roleta
-                        .environment(\.locale, Locale(identifier: "pt_BR"))
-                        
-                        // Se quiser mostrar como texto formatado:
-                        // Text("Data escolhida: \(dateFormatter.string(from: dataNascimento))")
+                        // --------- CAMPO DE DATA -----------
+                        Group {
+                            if mostrandoSelecaoData {
+                                VStack(spacing: 12) {
+                                    Button("OK") {
+                                        mostrandoSelecaoData = false
+                                        dataNascimentoSelecionada = true
+                                    }
+                                    .padding(.bottom, 4)
+                                    .font(.headline)
+                                    .frame(maxWidth: .infinity)
+                                    
+                                    DatePicker(
+                                        "",
+                                        selection: $dataNascimento,
+                                        displayedComponents: .date
+                                    )
+                                    .datePickerStyle(.wheel)
+                                    .environment(\.locale, Locale(identifier: "pt_BR"))
+                                    .labelsHidden()
+                                }
+                                .padding()
+                                .background(Color(.systemGray6))
+                                .cornerRadius(14)
+                                .shadow(radius: 2)
+                            } else {
+                                Button(action: {
+                                    mostrandoSelecaoData = true
+                                }) {
+                                    if !dataNascimentoSelecionada {
+                                        Text("Clique para selecionar data")
+                                            .foregroundColor(.blue)
+                                            .padding(8)
+                                            .frame(maxWidth: .infinity)
+                                            .background(Color(.systemGray6))
+                                            .cornerRadius(8)
+                                    } else {
+                                        Text(dateFormatter.string(from: dataNascimento))
+                                            .foregroundColor(.primary)
+                                            .underline()
+                                            .padding(8)
+                                            .frame(maxWidth: .infinity)
+                                            .background(Color(.systemGray6))
+                                            .cornerRadius(8)
+                                    }
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
+                        }
+                        // ------------------------------------
                         
                         RadioGroupViews(options: opcoesSexo, selected: $sexoSelecionado)
                     }
