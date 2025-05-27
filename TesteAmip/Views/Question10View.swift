@@ -1,43 +1,150 @@
-///
-//  Question2View.swift
-//  TesteAmip
-//
-//  Created by ANDRE LUIZ MENDES DO NASCIMENTO RIBEIRO on 20/05/25.
-//
-
 import SwiftUI
 
 struct Question10View: View {
-    // aqui você deve declarar os @State necessários para as respostas desta tela
-    @State private var respostaExemplo = ""
+    @State private var algumMoradorTrabalha: String = ""
+    @State private var municipioPaisTrabalho: String = ""
+    @State private var retornaTrabalho3DiasMais: String = ""
+    @State private var tempoDeslocamento: Double = 0.0 // Para o Slider
+    @State private var meioTransporte: String = ""
+    
+    let opcoesSimNao = ["Sim", "Não"]
+    let opcoesMunicipioPais = [
+        "Apenas em casa ou na propriedade/neste município",
+        "Fora de casa, da propriedade/neste município",
+        "Em outro município do Brasil",
+        "Em outro país",
+        "Em mais de um município ou país"
+    ]
+    let opcoesMeioTransporte = [
+        "A pé",
+        "Bicicleta",
+        "Motocicleta",
+        "Automóvel",
+        "Táxi ou assemelhados",
+        "Van ou assemelhados",
+        "Embarcação de médio e grande porte (acima de 20 pessoas)",
+        "Embarcação de pequeno porte (até 20 pessoas)",
+        "Outros"
+    ]
     
     var body: some View {
-        VStack(spacing: 20) {
-            Text("PERGUNTA 10")
+        VStack(spacing: 0) {
+            HeaderView() // Assumindo que HeaderView já está definida
+            
+            ScrollView {
+                VStack(spacing: 20) {
+                    Text("10. DESLOCAMENTO PARA TRABALHO (PARA PESSOA QUE TRABALHA)")
+                        .font(.system(size: 23))
+                        .bold()
+                        .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 7.5)
+                    
+                    // Bloco: Algum morador da residência trabalha?
+                    blocoRadio(
+                        titulo: "ALGUM MORADOR DA RESIDÊNCIA TRABALHA?",
+                        selecao: $algumMoradorTrabalha,
+                        opcoes: opcoesSimNao
+                    )
+                    
+                    // Bloco: Em que município ou país estrangeiro trabalha?
+                    blocoRadio(
+                        titulo: "EM QUE MUNICÍPIO OU PAÍS ESTRANGEIRO TRABALHA?",
+                        selecao: $municipioPaisTrabalho,
+                        opcoes: opcoesMunicipioPais
+                    )
+                    
+                    // Bloco: Retorna do trabalho para casa 3 dias ou mais na semana?
+                    blocoRadio(
+                        titulo: "RETORNA DO TRABALHO PARA CASA 3 DIAS OU MAIS NA SEMANA? (Considerar a semana de 7 dias)",
+                        selecao: $retornaTrabalho3DiasMais,
+                        opcoes: opcoesSimNao
+                    )
+                    
+                    // Bloco: Quanto tempo leva de sua casa até o local de trabalho normalmente?
+                    blocoSlider(
+                        titulo: "QUANTO TEMPO LEVA DE SUA CASA ATÉ O LOCAL DE TRABALHO NORMALMENTE?(Minutos)",
+                        valor: $tempoDeslocamento,
+                        rotuloMin: "0",
+                        rotuloMax: "100+",
+                        legenda: "Caso não se desloque, selecionar 0"
+                    )
+                    
+                    // Bloco: Qual o principal meio de transporte utilizado para chegar ao local de trabalho?
+                    blocoRadio(
+                        titulo: "QUAL O PRINCIPAL MEIO DE TRANSPORTE UTILIZADO PARA CHEGAR AO LOCAL DE TRABALHO?",
+                        selecao: $meioTransporte,
+                        opcoes: opcoesMeioTransporte
+                    )
+                    
+                    // Botões de navegação
+                    FormNavigationButtonsRows(
+                        backDestination: Question9View(), // Assumindo que Question9View é a anterior
+                        nextDestination: Question11View() // Assumindo que Question11View é a próxima
+                    )
+                }
+                .padding()
+            }
+        }
+        .navigationBarHidden(true)
+    }
+    
+    // MARK: - Componentes reutilizáveis (adaptados ou copiados aqui para clareza)
+    
+    @ViewBuilder
+    func blocoRadio(titulo: String, selecao: Binding<String>, opcoes: [String]) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(titulo)
                 .font(.headline)
                 .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
-            // Exemplo de campo de resposta
-            TextField("Digite sua resposta", text: $respostaExemplo)
-                .padding(8)
-                .background(Color.white)
-                .cornerRadius(8)
-            
-            Spacer()
-            
-            // BOTÃO DE NAVEGAÇÃO PARA A PRÓXIMA TELA
-            NavigationLink(destination: Question11View()) {
-                Text("Próxima")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
-            .padding(.horizontal)
+            RadioGroupViews(options: opcoes, selected: selecao) // Assumindo RadioGroupViews é um componente existente
         }
         .padding()
-        .navigationTitle("Pergunta 10")
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(red: 218/255, green: 249/255, blue: 254/255))
+        .cornerRadius(20)
+    }
+    
+    @ViewBuilder
+    func blocoSlider(titulo: String, valor: Binding<Double>, rotuloMin: String, rotuloMax: String, legenda: String) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(titulo)
+                .font(.headline)
+                .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            Slider(value: valor, in: 0...100, step: 1) // Ajuste o 'in' e 'step' conforme sua necessidade, 100 pode ser o max de minutos
+                .tint(Color(red: 0.0, green: 0.3, blue: 0.3)) // Cor do slider
+            
+            HStack {
+                Text(rotuloMin)
+                    .font(.caption)
+                    .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+                Spacer()
+                Text(String(format: "%.0f", valor.wrappedValue)) // Mostra o valor atual
+                    .font(.caption)
+                    .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+                Spacer()
+                Text(rotuloMax)
+                    .font(.caption)
+                    .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+            }
+            .padding(.horizontal, 4)
+            
+            Text(legenda)
+                .font(.caption)
+                .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+                .frame(maxWidth: .infinity, alignment: .center) // Centraliza a legenda
+                .padding(.top, 4)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(red: 218/255, green: 249/255, blue: 254/255))
+        .cornerRadius(20)
     }
 }
 
