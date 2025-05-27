@@ -20,6 +20,22 @@ struct LabeledTextFieldViews: View {
     }
 }
 
+struct HeaderView: View {
+    var body: some View {
+        ZStack {
+            Color(red: 199/255, green: 234/255, blue: 233/255)
+                .ignoresSafeArea(edges: .top)
+                .frame(height: 130)
+
+            Image("logo_branca")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 125)
+                .padding(.horizontal, 16)
+        }
+    }
+}
+
 //tava dando problema com o nome botei um s no final desse struct, sepa todos os structs temq ter nome diferente
 struct RadioGroupViews: View {
     let options: [String]
