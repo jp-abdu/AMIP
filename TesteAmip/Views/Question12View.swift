@@ -61,7 +61,7 @@ struct Question12View: View {
             //.frame(width: 320, height: 220, alignment: .leading)
             
             Spacer()
-            
+            VStack(alignment: .leading, spacing: 5){
             HStack(spacing: 10){
                 NavigationLink(destination: Question11View()) {
                     Text("Voltar")
@@ -84,6 +84,12 @@ struct Question12View: View {
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
+            }
+                NavigationLink(destination: HomeView()) {
+                    Text("Retornar ao Home")
+                        .foregroundColor(Color(red: 0/255, green: 104/255, blue: 150/255))
+                        .underline(true, color: Color(red: 0/255, green: 104/255, blue: 150/255))
+                }
             }
             .padding(.horizontal)
         }
