@@ -3,7 +3,7 @@ import SwiftUI
 struct Question2View: View {
     @State private var numeroMoradores = ""
     @State private var nomeCompleto = ""
-    @State private var dataNascimento = ""
+    @State private var dataNascimento = Date() // Agora é Date
     @State private var sexoSelecionado = ""
     @State private var parentescoSelecionado = ""
     @State private var situacaoDomicilioSelecionada = ""
@@ -38,6 +38,13 @@ struct Question2View: View {
         "Outra forma"
     ]
     
+    // DateFormatter para exibir a data formatada se precisar mostrar como texto
+    var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy"
+        return formatter
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             HeaderView()
@@ -70,7 +77,18 @@ struct Question2View: View {
                             .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
                         
                         LabeledTextFieldViews(title: "Nome Completo", text: $nomeCompleto)
-                        LabeledTextFieldViews(title: "00/00/0000", text: $dataNascimento, keyboardType: .numbersAndPunctuation)
+                        
+                        // --------- ALTERAÇÃO PRINCIPAL ---------
+                        DatePicker(
+                            "Data de Nascimento",
+                            selection: $dataNascimento,
+                            displayedComponents: .date
+                        )
+                        .datePickerStyle(.compact) // ou .wheel se preferir roleta
+                        .environment(\.locale, Locale(identifier: "pt_BR"))
+                        
+                        // Se quiser mostrar como texto formatado:
+                        // Text("Data escolhida: \(dateFormatter.string(from: dataNascimento))")
                         
                         RadioGroupViews(options: opcoesSexo, selected: $sexoSelecionado)
                     }
@@ -122,3 +140,4 @@ struct Question2View_Previews: PreviewProvider {
         }
     }
 }
+

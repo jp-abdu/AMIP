@@ -2,17 +2,23 @@ import SwiftUI
 
 struct Question7View: View {
     @State private var faleceuPessoa: String = ""
-    @State private var dataFalecimento: String = ""
+    @State private var dataFalecimento: Date = Date() // Agora é Date
     @State private var nomeCompletoFalecido: String = ""
     @State private var idadeFalecido: String = ""
     @State private var sexoFalecido: String = ""
     
     let opcoesSimNao = ["Sim", "Não"]
     let opcoesSexo = ["Masculino", "Feminino"]
+
+    var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy"
+        return formatter
+    }
     
     var body: some View {
         VStack(spacing: 0) {
-            HeaderView() // Assumindo que HeaderView já está definida
+            HeaderView()
             
             ScrollView {
                 VStack(spacing: 20) {
@@ -23,23 +29,23 @@ struct Question7View: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading, 7.5)
                     
-                    // Bloco: Faleceu alguma pessoa que morava com você(s)?
                     blocoRadio(titulo: "FALECEU ALGUMA PESSOA QUE MORAVA COM VOCÊ(S)?", selecao: $faleceuPessoa, opcoes: opcoesSimNao)
                     
-                    // Bloco: Data do Falecimento
-                    blocoCampoTexto(titulo: "DATA DO FALECIMENTO:", texto: $dataFalecimento, placeholder: "DD/MM/AAAA", keyboardType: .numbersAndPunctuation)
+                    // DatePicker centralizado
+                    blocoDatePicker(
+                        titulo: "DATA DO FALECIMENTO:",
+                        data: $dataFalecimento
+                    )
                     
-                    // Bloco: Nome completo, Idade e Sexo
                     blocoDadosFalecido(
                         nome: $nomeCompletoFalecido,
                         idade: $idadeFalecido,
                         sexo: $sexoFalecido
                     )
                     
-                    // Botões de navegação
                     FormNavigationButtonsRows(
-                        backDestination: Question6View(), // Assumindo que Question6View é a anterior
-                        nextDestination: Question8View()  // Assumindo que Question8View é a próxima
+                        backDestination: Question6View(),
+                        nextDestination: Question8View()
                     )
                 }
                 .padding()
@@ -48,7 +54,7 @@ struct Question7View: View {
         .navigationBarHidden(true)
     }
     
-    // MARK: - Componentes reutilizáveis (iguais aos das views anteriores, adaptados ou copiados aqui para clareza)
+    // MARK: - Componentes reutilizáveis
     
     @ViewBuilder
     func blocoRadio(titulo: String, selecao: Binding<String>, opcoes: [String]) -> some View {
@@ -59,16 +65,17 @@ struct Question7View: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
-            RadioGroupViews(options: opcoes, selected: selecao) // Assumindo RadioGroupViews é um componente existente
+            RadioGroupViews(options: opcoes, selected: selecao)
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(red: 218/255, green: 249/255, blue: 254/255))
         .cornerRadius(20)
     }
-    
+
+    // NOVO: bloco para o DatePicker centralizado
     @ViewBuilder
-    func blocoCampoTexto(titulo: String, texto: Binding<String>, placeholder: String = "", keyboardType: UIKeyboardType = .default) -> some View {
+    func blocoDatePicker(titulo: String, data: Binding<Date>) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(titulo)
                 .font(.headline)
@@ -76,7 +83,21 @@ struct Question7View: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
-            LabeledTextFieldViews(title: placeholder, text: texto, keyboardType: keyboardType) // Assumindo LabeledTextFieldViews é um componente existente
+            // O segredo está aqui!
+            HStack {
+                Spacer()
+                DatePicker(
+                    "",
+                    selection: data,
+                    displayedComponents: .date
+                )
+                // Troque o estilo aqui conforme desejar:
+                // .datePickerStyle(.compact) // Centraliza só em alguns devices/iOS
+                .datePickerStyle(.wheel)     // Centraliza em todos!
+                .environment(\.locale, Locale(identifier: "pt_BR"))
+                Spacer()
+            }
+            .frame(maxWidth: .infinity)
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
