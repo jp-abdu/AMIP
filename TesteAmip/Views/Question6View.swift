@@ -22,10 +22,17 @@ struct Question6View: View {
         "20.001,00 a 100.000,00",
         "100.001 ou mais"
     ]
-
+    
     var body: some View {
+        VStack(spacing: 0){
+            HeaderView()
+        
+        
         ScrollView {
+            
             VStack(spacing: 20) {
+                    
+                
                 Text("6. TRABALHO E RENDIMENTO")
                     .font(.system(size: 23))
                     .bold()
@@ -74,6 +81,7 @@ struct Question6View: View {
             .padding()
         }
     }
+}
 }
 struct FormSectionView<Content: View>: View {
     let title: String
@@ -144,7 +152,9 @@ struct FormNavigationButtonsRow<BackDestination: View, NextDestination: View>: V
             }
         }
         .padding(.top)
+        .navigationBarHidden(true)
     }
+       
 }
 
 
@@ -209,6 +219,22 @@ struct Question6View_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             Question6View()
+        }
+    }
+}
+
+struct Headerview: View {
+    var body: some View {
+        ZStack {
+            Color(red: 199/255, green: 234/255, blue: 233/255)
+                .ignoresSafeArea(edges: .top)
+                .frame(height: 130)
+
+            Image("logo_branca")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 125)
+                .padding(.horizontal, 16)
         }
     }
 }
