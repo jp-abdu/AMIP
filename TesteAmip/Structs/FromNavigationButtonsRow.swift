@@ -1,13 +1,4 @@
 import SwiftUI
-
-var body: some View {
-    ScrollView {
-        VStack(spacing: 20) {
-FormNavigationButtonsRow(backDestination: Question5View(),nextDestination: Question7View())
-        }
-    }
-}
-
 //tava dando problema com o nome botei um s no final desse, sepa todos os structs temq ter nome diferente
 
 struct FormNavigationButtonsRows<BackDestination: View, NextDestination: View>: View {
