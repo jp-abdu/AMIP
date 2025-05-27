@@ -72,5 +72,6 @@ struct RadioGroupViews: View {
                 }
             }
         }
+        .padding()
     }
 }

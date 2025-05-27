@@ -74,14 +74,16 @@ struct Question6View: View {
                 FormSectionView(title: "FAIXA DE RENDIMENTO") {
                     RadioGroupView(options: faixasDeRendimento, selected: $faixaRendimento)
                 }
-
+                
                 // Botão de próxima
-                FormNavigationButtonsRow(backDestination: Question5View(),nextDestination: Question7View())
+                FormNavigationButtonsRows(backDestination: Question5View(),nextDestination: Question7View())
             }
             .padding()
+            .navigationBarHidden(true)
         }
     }
 }
+
 }
 struct FormSectionView<Content: View>: View {
     let title: String
@@ -107,55 +109,6 @@ struct FormSectionView<Content: View>: View {
     }
 }
 import SwiftUI
-
-struct FormNavigationButtonsRow<BackDestination: View, NextDestination: View>: View {
-    let backLabel: String
-    let nextLabel: String
-    let backDestination: BackDestination
-    let nextDestination: NextDestination
-
-    init(
-        backLabel: String = "Voltar",
-        nextLabel: String = "Próxima",
-        backDestination: BackDestination,
-        nextDestination: NextDestination
-    ) {
-        self.backLabel = backLabel
-        self.nextLabel = nextLabel
-        self.backDestination = backDestination
-        self.nextDestination = nextDestination
-    }
-
-    var body: some View {
-        HStack(spacing: 10) {
-            // Botão Voltar
-            NavigationLink(destination: backDestination) {
-                Text(backLabel)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .foregroundColor(Color(red: 0/255, green: 104/255, blue: 150/255))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color(red: 0/255, green: 104/255, blue: 150/255), lineWidth: 1.8)
-                    )
-                    .cornerRadius(10)
-            }
-
-            // Botão Próxima
-            NavigationLink(destination: nextDestination) {
-                Text(nextLabel)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color(red: 0/255, green: 107/255, blue: 140/255))
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
-        }
-        .padding(.top)
-        .navigationBarHidden(true)
-    }
-       
-}
 
 
 struct LabeledTextFieldView: View {
@@ -223,18 +176,4 @@ struct Question6View_Previews: PreviewProvider {
     }
 }
 
-struct Headerview: View {
-    var body: some View {
-        ZStack {
-            Color(red: 199/255, green: 234/255, blue: 233/255)
-                .ignoresSafeArea(edges: .top)
-                .frame(height: 130)
 
-            Image("logo_branca")
-                .resizable()
-                .scaledToFit()
-                .frame(height: 125)
-                .padding(.horizontal, 16)
-        }
-    }
-}

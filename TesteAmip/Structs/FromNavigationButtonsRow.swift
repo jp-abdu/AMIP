@@ -1,15 +1,14 @@
 import SwiftUI
-//tava dando problema com o nome botei um s no final desse, sepa todos os structs temq ter nome diferente
 
 struct FormNavigationButtonsRows<BackDestination: View, NextDestination: View>: View {
-    let backLabel: String
-    let nextLabel: String
     let backDestination: BackDestination
     let nextDestination: NextDestination
+    let backLabel: String
+    let nextLabel: String
 
     init(
         backLabel: String = "Voltar",
-        nextLabel: String = "Próxima",
+        nextLabel: String = "Finalizar",
         backDestination: BackDestination,
         nextDestination: NextDestination
     ) {
@@ -20,30 +19,40 @@ struct FormNavigationButtonsRows<BackDestination: View, NextDestination: View>: 
     }
 
     var body: some View {
-        HStack(spacing: 10) {
-            // Botão Voltar
-            NavigationLink(destination: backDestination) {
-                Text(backLabel)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .foregroundColor(Color(red: 0/255, green: 104/255, blue: 150/255))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color(red: 0/255, green: 104/255, blue: 150/255), lineWidth: 1.8)
-                    )
-                    .cornerRadius(10)
+        Spacer()
+        VStack(alignment: .leading, spacing: 5) {
+            HStack(spacing: 10) {
+                // Botão Voltar
+                NavigationLink(destination: backDestination) {
+                    Text(backLabel)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .foregroundColor(Color(red: 0/255, green: 104/255, blue: 150/255))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color(red: 0/255, green: 104/255, blue: 150/255), lineWidth: 1.8)
+                        )
+                        .cornerRadius(10)
+                }
+
+                // Botão Finalizar
+                NavigationLink(destination: nextDestination) {
+                    Text(nextLabel)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color(red: 0/255, green: 104/255, blue: 150/255))
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
             }
 
-            // Botão Próxima
-            NavigationLink(destination: nextDestination) {
-                Text(nextLabel)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color(red: 0/255, green: 107/255, blue: 140/255))
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+            // Link para a Home
+            NavigationLink(destination: HomeView()) {
+                Text("Retornar ao Home")
+                    .foregroundColor(Color(red: 0/255, green: 104/255, blue: 150/255))
+                    .underline(true, color: Color(red: 0/255, green: 104/255, blue: 150/255))
             }
         }
-        .padding(.top)
+        .padding(.horizontal)
     }
 }
