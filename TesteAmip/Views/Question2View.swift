@@ -1,43 +1,117 @@
-//
-//  Question2View.swift
-//  TesteAmip
-//
-//  Created by ANDRE LUIZ MENDES DO NASCIMENTO RIBEIRO on 20/05/25.
-//
-
 import SwiftUI
 
 struct Question2View: View {
-    // aqui você deve declarar os @State necessários para as respostas desta tela
-    @State private var respostaExemplo = ""
+    @State private var numeroMoradores = ""
+    @State private var nomeCompleto = ""
+    @State private var dataNascimento = ""
+    @State private var sexoSelecionado = ""
+    @State private var parentescoSelecionado = ""
+    @State private var situacaoDomicilioSelecionada = ""
+    
+    let opcoesSexo = ["Masculino", "Feminino"]
+    
+    let opcoesParentesco = [
+        "Cônjuge ou companheiro(a) de sexo diferente",
+        "Cônjuge ou companheiro(a) do mesmo sexo",
+        "Filho(a) do responsável e do cônjuge",
+        "Filho(a) somente do responsável",
+        "Genro ou nora",
+        "Pai, mãe, padrasto ou madrasta",
+        "Sogro(a)",
+        "Neto(a)",
+        "Enteado(a)",
+        "Irmão ou irmã",
+        "Avô ou avó",
+        "Empregado(a) doméstico(a)",
+        "Parente do(a) empregado(a) doméstico(a)",
+        "Individual em domicílio coletivo",
+        "Outros"
+    ]
+    
+    let opcoesSituacaoDomicilio = [
+        "Próprio de algum morador cedido ou emprestado",
+        "Ainda pagando",
+        "Alugado",
+        "Por empregador",
+        "Por familiar",
+        "Já pago, herdado ou ganho",
+        "Outra forma"
+    ]
     
     var body: some View {
-        VStack(spacing: 20) {
-            Text("PERGUNTA 2")
-                .font(.headline)
-                .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+        VStack(spacing: 0) {
+            HeaderView()
             
-            // Exemplo de campo de resposta
-            TextField("Digite sua resposta", text: $respostaExemplo)
-                .padding(8)
-                .background(Color.white)
-                .cornerRadius(8)
-            
-            Spacer()
-            
-            // BOTÃO DE NAVEGAÇÃO PARA A PRÓXIMA TELA
-            NavigationLink(destination: Question3View()) {
-                Text("Próxima")
-                    .frame(maxWidth: .infinity)
+            ScrollView {
+                VStack(spacing: 20) {
+                    
+                    Text("2. INFORMAÇÕES SOBRE OS MORADORES")
+                        .font(.system(size: 23))
+                        .bold()
+                        .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 7.5)
+                    
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("Quantas pessoas moram na residência?")
+                            .font(.headline)
+                            .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+                        
+                        LabeledTextFieldViews(title: "", text: $numeroMoradores, keyboardType: .numberPad)
+                    }
                     .padding()
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color(red: 218/255, green: 249/255, blue: 254/255))
+                    .cornerRadius(20)
+                    
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("Nome completo, data de nascimento e sexo:")
+                            .font(.headline)
+                            .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+                        
+                        LabeledTextFieldViews(title: "Nome Completo", text: $nomeCompleto)
+                        LabeledTextFieldViews(title: "00/00/0000", text: $dataNascimento, keyboardType: .numbersAndPunctuation)
+                        
+                        RadioGroupViews(options: opcoesSexo, selected: $sexoSelecionado)
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color(red: 218/255, green: 249/255, blue: 254/255))
+                    .cornerRadius(20)
+                    
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("Relação de parentesco com a pessoa responsável pelo domicílio")
+                            .font(.headline)
+                            .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+                        
+                        RadioGroupViews(options: opcoesParentesco, selected: $parentescoSelecionado)
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color(red: 218/255, green: 249/255, blue: 254/255))
+                    .cornerRadius(20)
+                    
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("Este domicílio é:")
+                            .font(.headline)
+                            .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+                        
+                        RadioGroupViews(options: opcoesSituacaoDomicilio, selected: $situacaoDomicilioSelecionada)
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color(red: 218/255, green: 249/255, blue: 254/255))
+                    .cornerRadius(20)
+                    
+                    FormNavigationButtonsRows(
+                        backDestination: Question1View(),
+                        nextDestination: Question3View()
+                    )
+                }
+                .padding()
             }
-            .padding(.horizontal)
         }
-        .padding()
-        .navigationTitle("Pergunta 2")
+        .navigationBarHidden(true)
     }
 }
 
@@ -48,4 +122,3 @@ struct Question2View_Previews: PreviewProvider {
         }
     }
 }
-
