@@ -1,43 +1,55 @@
-//
-//  Question2View.swift
-//  TesteAmip
-//
-//  Created by ANDRE LUIZ MENDES DO NASCIMENTO RIBEIRO on 20/05/25.
-//
-
 import SwiftUI
 
 struct Question4View: View {
-    // aqui você deve declarar os @State necessários para as respostas desta tela
-    @State private var respostaExemplo = ""
+    @State private var respostaSelecionada = ""
+    
+    let opcoes = [
+        "Do cartório",
+        "Nao tem",
+        "Nao sabe"
+    ]
     
     var body: some View {
-        VStack(spacing: 20) {
-            Text("PERGUNTA 4")
-                .font(.headline)
-                .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+        VStack(spacing: 0) {
             
-            // Exemplo de campo de resposta
-            TextField("Digite sua resposta", text: $respostaExemplo)
-                .padding(8)
-                .background(Color.white)
-                .cornerRadius(8)
+            // HEADER COM LOGO
+            HeaderView()
             
-            Spacer()
-            
-            // BOTÃO DE NAVEGAÇÃO PARA A PRÓXIMA TELA
-            NavigationLink(destination: Question5View()) {
-                Text("Próxima")
-                    .frame(maxWidth: .infinity)
+            ScrollView {
+                VStack(spacing: 20) {
+                    
+                    Text("4. REGISTRO CIVIL")
+                        .font(.system(size: 23))
+                        .bold()
+                        .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 7.5)
+                    
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("Tem registro de nascimento:")
+                            .font(.headline)
+                            .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+                        
+                        // Reutiliza o RadioGroupViews
+                        RadioGroupViews(options: opcoes, selected: $respostaSelecionada)
+                    }
                     .padding()
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color(red: 218/255, green: 249/255, blue: 254/255))
+                    .cornerRadius(20)
+                    
+                    // Botões de navegação reutilizáveis
+                    FormNavigationButtonsRows(
+                        backLabel: "Voltar",
+                        nextLabel: "Próxima",
+                        backDestination: Question3View(),
+                        nextDestination: Question5View()
+                    )
+                }
+                .padding()
             }
-            .padding(.horizontal)
         }
-        .padding()
-        .navigationTitle("Pergunta 4")
+        .navigationBarHidden(true)
     }
 }
 
