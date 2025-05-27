@@ -8,7 +8,7 @@ struct FormNavigationButtonsRows<BackDestination: View, NextDestination: View>: 
 
     init(
         backLabel: String = "Voltar",
-        nextLabel: String = "Finalizar",
+        nextLabel: String = "Próxima",
         backDestination: BackDestination,
         nextDestination: NextDestination
     ) {
