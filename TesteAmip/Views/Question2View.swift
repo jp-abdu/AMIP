@@ -73,7 +73,7 @@ struct Question2View: View {
                     .cornerRadius(20)
                     
                     VStack(alignment: .leading, spacing: 16) {
-                        Text("Nome completo, data de nascimento e sexo:")
+                        Text("Nome completo, data de nascimento e sexo do entrevistado:")
                             .font(.headline)
                             .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
                         

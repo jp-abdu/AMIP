@@ -29,7 +29,7 @@ struct Question7View: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading, 7.5)
                     
-                    blocoRadio(titulo: "FALECEU ALGUMA PESSOA QUE MORAVA COM VOCÊ(S)?", selecao: $faleceuPessoa, opcoes: opcoesSimNao)
+                    blocoRadio(titulo: "FALECEU ALGUMA PESSOA QUE MORAVA COM VOCÊ(S) NOS ULTIMOS DOIS ANOS(OU DESDE O ULTIMO SENSO)?", selecao: $faleceuPessoa, opcoes: opcoesSimNao)
                     
                     // DatePicker centralizado
                     blocoDatePicker(

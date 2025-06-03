@@ -71,7 +71,7 @@ struct Question6View: View {
                 }
 
                 // Pergunta 7
-                FormSectionView(title: "FAIXA DE RENDIMENTO") {
+                FormSectionView(title: "FAIXA DE RENDIMENTO DO DOMICÍLIO") {
                     RadioGroupView(options: faixasDeRendimento, selected: $faixaRendimento)
                 }
                 
