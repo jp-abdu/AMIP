@@ -4,57 +4,46 @@ struct Question1View: View {
     @State private var ruaSelecionada = ""
     @State private var numero = ""
     @State private var complemento = ""
+    @State private var especieSelecionada = ""
     @State private var tipoSelecionado = ""
-    @State private var coletaSelecionada = ""
-    @State private var aguaSelecionada = ""
-    @State private var observacoes = ""
 
-    let ruas = ["Selecione a Rua", "R. Marina do Sol", "R. Marina do Frade","R. Marina dos Coqueiros","R. Marina da Lua","R. Marina do Bosque", "R. Marina Porto Bali","R. Marina das Flores","R. Marina das Estrelas","R. Marina Ponta Leste"]
+    let ruas = [
+        "Selecione a Rua", "R. Marina do Sol", "R. Marina do Frade",
+        "R. Marina dos Coqueiros", "R. Marina da Lua", "R. Marina do Bosque",
+        "R. Marina Porto Bali", "R. Marina das Flores", "R. Marina das Estrelas",
+        "R. Marina Ponta Leste"
+    ]
+
     let especieDomicilio = [
         "Domicílio particular permanente ocupado",
         "Domicílio particular improvisado ocupado",
         "Domicílio coletivo com morador"
     ]
+
     let tipoDomicilio = [
-        "Casa",
-        "Casa de vila ou condomínio",
+        "Casa", "Casa de vila ou condomínio",
         "Habitação em casa de comodos ou cortiço",
         "Estrutura residencial permanente degradada ou inacabada",
         "Asilo ou outra instituição de permanência para idosos",
-        "Hotel ou pensão",
-        "Alojamento",
-        "Outros"
+        "Hotel ou pensão", "Alojamento", "Outros"
     ]
 
     var body: some View {
         VStack(spacing: 0) {
-            
-            // HEADER COM LOGO
-            ZStack {
-                Color(red: 199/255, green: 234/255, blue: 233/255)
-                                .ignoresSafeArea(edges: .top)
-                                .frame(height: 130)
-
-                            Image("logo_branca")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 125) // Diminui um pouco para garantir que cabe
-                                .padding(.horizontal, 16) // Evita que a imagem fique grudada nas laterais
-                        }
+            HeaderView()
 
             ScrollView {
                 VStack(spacing: 20) {
-                    
-                    Text("1. IDENTIFICAÇÃO DE DOMICÍLIO:")
+                    Text("1. IDENTIFICAÇÃO DE DOMICÍLIO")
                         .font(.system(size: 23))
                         .bold()
                         .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading, 7.5)
-                    
-                    // Bloco: IDENTIFICAÇÃO DE DOMICÍLIO
+
+                    // Bloco: Endereço
                     VStack(alignment: .leading, spacing: 16) {
-                        Text("IDENTIFICAÇÃO DE DOMICÍLIO:")
+                        Text("Endereço:")
                             .font(.headline)
                             .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
 
@@ -68,107 +57,42 @@ struct Question1View: View {
                         .background(Color.white)
                         .cornerRadius(8)
 
-                        TextField("Número", text: $numero)
-                            .keyboardType(.numberPad)
-                            .padding(8)
-                            .background(Color.white)
-                            .cornerRadius(8)
-                        
-                        TextField("Complemento", text: $complemento)
-                            .keyboardType(.numberPad)
-                            .padding(8)
-                            .background(Color.white)
-                            .cornerRadius(8)
+                        LabeledTextFieldViews(title: "Número", text: $numero, keyboardType: .numberPad)
+                        LabeledTextFieldViews(title: "Complemento", text: $complemento)
                     }
                     .padding()
-                    .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color(red: 218/255, green: 249/255, blue: 254/255))
                     .cornerRadius(20)
 
-                    // Bloco: ESPÉCIE DE DOMICÍLIO
+                    // Bloco: Espécie de domicílio
                     VStack(alignment: .leading, spacing: 16) {
-                        Text("ESPÉCIE DE DOMICÍLIO OCUPADO:")
+                        Text("Espécie de domicílio:")
                             .font(.headline)
                             .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
 
-                        ForEach(especieDomicilio, id: \.self) { tipo in
-                            HStack(spacing: 12) {
-                                ZStack {
-                                    Circle()
-                                        .fill(Color.white)
-                                        .frame(width: 25, height: 25)
-                                        .overlay(Circle().stroke(Color.black, lineWidth: 1))
-                                    
-                                    if tipoSelecionado == tipo {
-                                        Circle()
-                                            .fill(Color.blue)
-                                            .frame(width: 10, height: 10)
-                                    }
-                                }
-
-                                Text(tipo)
-                                    .foregroundColor(.black)
-                                    .fixedSize(horizontal: false, vertical: true)
-                                    .font(.system(size: 17))
-                            }
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                tipoSelecionado = tipo
-                            }
-                        }
+                        RadioGroupViews(options: especieDomicilio, selected: $especieSelecionada)
                     }
                     .padding()
-                    .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color(red: 218/255, green: 249/255, blue: 254/255))
                     .cornerRadius(20)
 
-                    // Bloco: TIPO DE DOMICÍLIO
+                    // Bloco: Tipo de domicílio
                     VStack(alignment: .leading, spacing: 16) {
-                        Text("TIPO DE DOMICÍLIO")
+                        Text("Tipo de domicílio:")
                             .font(.headline)
                             .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
 
-                        ForEach(tipoDomicilio, id: \.self) { tipo in
-                            HStack(spacing: 12) {
-                                ZStack {
-                                    Circle()
-                                        .fill(Color.white)
-                                        .frame(width: 25, height: 25)
-                                        .overlay(Circle().stroke(Color.black, lineWidth: 1))
-                                    
-                                    if tipoSelecionado == tipo {
-                                        Circle()
-                                            .fill(Color.blue)
-                                            .frame(width: 10, height: 10)
-                                    }
-                                }
-
-                                Text(tipo)
-                                    .foregroundColor(.black)
-                                    .fixedSize(horizontal: false, vertical: true)
-                                    .font(.system(size: 17))
-                            }
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                tipoSelecionado = tipo
-                            }
-                        }
+                        RadioGroupViews(options: tipoDomicilio, selected: $tipoSelecionado)
                     }
                     .padding()
-                    .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color(red: 218/255, green: 249/255, blue: 254/255))
                     .cornerRadius(20)
 
-                    // BOTÃO
-                    NavigationLink(destination: Question2View()) {
-                        Text("Próxima")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color(red: 0/255, green: 107/255, blue: 140/255))
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                    }
-                    .padding(.top)
+                    // Botões de navegação
+                    FormNavigationButtonsRows(
+                        backDestination: HomeView(),
+                        nextDestination: Question2View()
+                    )
                 }
                 .padding()
             }
