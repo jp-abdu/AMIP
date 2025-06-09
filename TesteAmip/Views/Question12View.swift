@@ -27,14 +27,48 @@ struct Question12View: View {
                     
                     // Botões de navegação
                     FormNavigationButtonsRows(
-                        backDestination: Question11View(), // Assumindo que Question11View é a anterior
-                        nextDestination: FormularioEnviadoView()  // Assumindo que Question13View é a próxima
+                        backDestination: Question11View(),
+                        nextDestination: FormularioEnviadoView(),
+                        canProceed: !diagnosticadoComAutismo.isEmpty,
+                        onNext: {
+                            postResposta(pergunta: "Autismo", resposta: diagnosticadoComAutismo, descricao: "Se algum morador foi diagnosticado com autismo")
+                        }
                     )
+
                 }
                 .padding()
             }
         }
         .navigationBarHidden(true)
+    }
+    
+    func postResposta(pergunta: String, resposta: String, descricao: String) {
+        guard let url = URL(string: "https://mysite-sdz6.onrender.com/indicadores") else { return }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let json: [String: String] = [
+            "pergunta": pergunta,
+            "resposta": resposta,
+            "descricao": descricao
+        ]
+
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
+            request.httpBody = jsonData
+
+            URLSession.shared.dataTask(with: request) { _, response, error in
+                if let error = error {
+                    print("Erro ao enviar: \(error)")
+                } else if let response = response as? HTTPURLResponse {
+                    print("Status: \(response.statusCode)")
+                }
+            }.resume()
+        } catch {
+            print("Erro ao converter JSON: \(error)")
+        }
     }
     
     // MARK: - Componentes reutilizáveis (copiados aqui para clareza)
