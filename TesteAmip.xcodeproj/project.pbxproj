@@ -129,7 +129,6 @@
 			isa = PBXGroup;
 			children = (
 				CD2B9CBF2DDD1E32005CDA8C /* Structs */,
-				C10DDAD02DCA9D7F003AC6FE /* Models */,
 				C10DDA9D2DCA9C4C003AC6FE /* TesteAmipApp.swift */,
 				C10DDAA12DCA9C4F003AC6FE /* Assets.xcassets */,
 				C10DDAC72DCA9CF2003AC6FE /* Views */,
@@ -184,13 +183,6 @@
 				51B329B72DDCEE33001F0726 /* Question12View.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		C10DDAD02DCA9D7F003AC6FE /* Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		CD2B9CBF2DDD1E32005CDA8C /* Structs */ = {
