@@ -48,14 +48,52 @@ struct Question8View: View {
                     
                     // Botões de navegação
                     FormNavigationButtonsRows(
-                        backDestination: Question7View(), // Assumindo que Question7View é a anterior
-                        nextDestination: Question9View()  // Assumindo que Question9View é a próxima
+                        backDestination: Question7View(),
+                        nextDestination: Question9View(),
+                        canProceed: !dificuldadeEnxergar.isEmpty &&
+                                    !dificuldadeOuvir.isEmpty &&
+                                    !dificuldadeAndar.isEmpty,
+                        onNext: {
+                            postResposta(pergunta: "Dificuldade para enxergar", resposta: dificuldadeEnxergar, descricao: "Problema visual mesmo com correção")
+                            postResposta(pergunta: "Dificuldade para ouvir", resposta: dificuldadeOuvir, descricao: "Problema auditivo mesmo com aparelhos")
+                            postResposta(pergunta: "Dificuldade para andar", resposta: dificuldadeAndar, descricao: "Problema de locomoção permanente")
+                        }
                     )
+
                 }
                 .padding()
             }
         }
         .navigationBarHidden(true)
+    }
+    
+    func postResposta(pergunta: String, resposta: String, descricao: String) {
+        guard let url = URL(string: "https://mysite-sdz6.onrender.com/api/indicadores/") else { return }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let json: [String: String] = [
+            "pergunta": pergunta,
+            "resposta": resposta,
+            "descricao": descricao
+        ]
+
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
+            request.httpBody = jsonData
+
+            URLSession.shared.dataTask(with: request) { _, response, error in
+                if let error = error {
+                    print("Erro ao enviar: \(error)")
+                } else if let response = response as? HTTPURLResponse {
+                    print("Status: \(response.statusCode)")
+                }
+            }.resume()
+        } catch {
+            print("Erro ao converter JSON: \(error)")
+        }
     }
     
     // MARK: - Componentes reutilizáveis (iguais aos das views anteriores, adaptados ou copiados aqui para clareza)

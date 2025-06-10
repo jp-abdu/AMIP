@@ -35,14 +35,48 @@ struct Question11View: View {
                     
                     // Botões de navegação
                     FormNavigationButtonsRows(
-                        backDestination: Question10View(), // Assumindo que Question10View é a anterior
-                        nextDestination: Question12View()  // Assumindo que Question12View é a próxima
+                        backDestination: Question10View(),
+                        nextDestination: Question12View(),
+                        canProceed: !religiaoSelecionada.isEmpty,
+                        onNext: {
+                            postResposta(pergunta: "Religião", resposta: religiaoSelecionada, descricao: "Religião ou culto do morador")
+                        }
                     )
+
                 }
                 .padding()
             }
         }
         .navigationBarHidden(true)
+    }
+    
+    func postResposta(pergunta: String, resposta: String, descricao: String) {
+        guard let url = URL(string: "https://mysite-sdz6.onrender.com/api/indicadores/") else { return }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let json: [String: String] = [
+            "pergunta": pergunta,
+            "resposta": resposta,
+            "descricao": descricao
+        ]
+
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
+            request.httpBody = jsonData
+
+            URLSession.shared.dataTask(with: request) { _, response, error in
+                if let error = error {
+                    print("Erro ao enviar: \(error)")
+                } else if let response = response as? HTTPURLResponse {
+                    print("Status: \(response.statusCode)")
+                }
+            }.resume()
+        } catch {
+            print("Erro ao converter JSON: \(error)")
+        }
     }
     
     // MARK: - Componentes reutilizáveis (copiados aqui para clareza)

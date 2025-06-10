@@ -73,14 +73,54 @@ struct Question9View: View {
                     
                     // Botões de navegação
                     FormNavigationButtonsRows(
-                        backDestination: Question8View(), // Assumindo que Question8View é a anterior
-                        nextDestination: Question10View() // Assumindo que Question10View é a próxima
+                        backDestination: Question8View(),
+                        nextDestination: Question10View(),
+                        canProceed: pessoasSabemLerEscrever != "Selecione" &&
+                                    !frequentaEscolaCreche.isEmpty &&
+                                    !cursoQueFrequenta.isEmpty &&
+                                    !concluiuOutroSuperior.isEmpty,
+                        onNext: {
+                            postResposta(pergunta: "Pessoas que sabem ler e escrever", resposta: pessoasSabemLerEscrever, descricao: "Quantidade de pessoas alfabetizadas")
+                            postResposta(pergunta: "Frequenta escola ou creche", resposta: frequentaEscolaCreche, descricao: "Situação educacional atual")
+                            postResposta(pergunta: "Curso frequentado", resposta: cursoQueFrequenta, descricao: "Tipo de curso atual")
+                            postResposta(pergunta: "Concluiu outro curso superior", resposta: concluiuOutroSuperior, descricao: "Histórico de ensino superior")
+                        }
                     )
+
                 }
                 .padding()
             }
         }
         .navigationBarHidden(true)
+    }
+    
+    func postResposta(pergunta: String, resposta: String, descricao: String) {
+        guard let url = URL(string: "https://mysite-sdz6.onrender.com/api/indicadores/") else { return }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let json: [String: String] = [
+            "pergunta": pergunta,
+            "resposta": resposta,
+            "descricao": descricao
+        ]
+
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
+            request.httpBody = jsonData
+
+            URLSession.shared.dataTask(with: request) { _, response, error in
+                if let error = error {
+                    print("Erro ao enviar: \(error)")
+                } else if let response = response as? HTTPURLResponse {
+                    print("Status: \(response.statusCode)")
+                }
+            }.resume()
+        } catch {
+            print("Erro ao converter JSON: \(error)")
+        }
     }
     
     // MARK: - Componentes reutilizáveis (adaptados ou copiados aqui para clareza)

@@ -41,9 +41,20 @@ struct Question5View: View {
                     
                     // Botões de navegação
                     FormNavigationButtonsRows(
-                        backDestination: Question4View(), // Assumindo que Question4View é a anterior
-                        nextDestination: Question6View()  // Assumindo que Question6View é a próxima
+                        backDestination: Question4View(),
+                        nextDestination: Question6View(),
+                        canProceed: !possuiConjugeOuCompanheiro.isEmpty &&
+                                    !vivemEmCompanhia.isEmpty &&
+                                    !nomeConjugeCompanheiro.isEmpty &&
+                                    !tipoUniao.isEmpty,
+                        onNext: {
+                            postResposta(pergunta: "Possui cônjuge", resposta: possuiConjugeOuCompanheiro, descricao: "Se tem cônjuge ou companheiro")
+                            postResposta(pergunta: "Vive em companhia", resposta: vivemEmCompanhia, descricao: "Se reside com o cônjuge")
+                            postResposta(pergunta: "Nome do cônjuge", resposta: nomeConjugeCompanheiro, descricao: "Nome do cônjuge ou companheiro")
+                            postResposta(pergunta: "Tipo de união", resposta: tipoUniao, descricao: "Forma de união")
+                        }
                     )
+
                 }
                 .padding()
             }
@@ -85,6 +96,35 @@ struct Question5View: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(red: 218/255, green: 249/255, blue: 254/255))
         .cornerRadius(20)
+    }
+    
+    func postResposta(pergunta: String, resposta: String, descricao: String) {
+        guard let url = URL(string: "https://mysite-sdz6.onrender.com/api/indicadores/") else { return }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let json: [String: String] = [
+            "pergunta": pergunta,
+            "resposta": resposta,
+            "descricao": descricao
+        ]
+
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
+            request.httpBody = jsonData
+
+            URLSession.shared.dataTask(with: request) { _, response, error in
+                if let error = error {
+                    print("Erro ao enviar: \(error)")
+                } else if let response = response as? HTTPURLResponse {
+                    print("Status: \(response.statusCode)")
+                }
+            }.resume()
+        } catch {
+            print("Erro ao converter JSON: \(error)")
+        }
     }
 }
 

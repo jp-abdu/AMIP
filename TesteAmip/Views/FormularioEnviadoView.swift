@@ -4,6 +4,7 @@ struct FormularioEnviadoView: View {
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
+        //ZStack(alignment: .center){
         VStack(spacing: 30) {
             Spacer()
             Image("certo")
@@ -30,6 +31,7 @@ struct FormularioEnviadoView: View {
         .padding()
         .background(Color(red: 0.85, green: 1.0, blue: 1.0).ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
+    //}
     }
 }
 
