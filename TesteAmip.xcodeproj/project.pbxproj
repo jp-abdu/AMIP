@@ -62,7 +62,7 @@
 		51B329B32DDCEE1D001F0726 /* Question10View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question10View.swift; sourceTree = "<group>"; };
 		51B329B52DDCEE28001F0726 /* Question11View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question11View.swift; sourceTree = "<group>"; };
 		51B329B72DDCEE33001F0726 /* Question12View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question12View.swift; sourceTree = "<group>"; };
-		C10DDA9A2DCA9C4C003AC6FE /* TesteAmip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TesteAmip.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C10DDA9A2DCA9C4C003AC6FE /* Amip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Amip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C10DDA9D2DCA9C4C003AC6FE /* TesteAmipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TesteAmipApp.swift; sourceTree = "<group>"; };
 		C10DDAA12DCA9C4F003AC6FE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C10DDAA42DCA9C4F003AC6FE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -118,7 +118,7 @@
 		C10DDA9B2DCA9C4C003AC6FE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C10DDA9A2DCA9C4C003AC6FE /* TesteAmip.app */,
+				C10DDA9A2DCA9C4C003AC6FE /* Amip.app */,
 				C10DDAAA2DCA9C4F003AC6FE /* TesteAmipTests.xctest */,
 				C10DDAB42DCA9C4F003AC6FE /* TesteAmipUITests.xctest */,
 			);
@@ -219,7 +219,7 @@
 			);
 			name = TesteAmip;
 			productName = TesteAmip;
-			productReference = C10DDA9A2DCA9C4C003AC6FE /* TesteAmip.app */;
+			productReference = C10DDA9A2DCA9C4C003AC6FE /* Amip.app */;
 			productType = "com.apple.product-type.application";
 		};
 		C10DDAA92DCA9C4F003AC6FE /* TesteAmipTests */ = {
@@ -524,7 +524,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Teste.TesteAmip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Amip;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -552,7 +552,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Teste.TesteAmip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Amip;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
