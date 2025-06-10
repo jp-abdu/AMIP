@@ -106,9 +106,7 @@ struct Question10View: View {
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("YMsVCDzsWo0Uvfn9D7RHDGCoAPnbKcG3Tqb9af7kSgzV8sD2NRQd3xCAzFlM0OQP", forHTTPHeaderField: "X-CSRFTOKEN")
 
         let json: [String: String] = [
             "pergunta": pergunta,

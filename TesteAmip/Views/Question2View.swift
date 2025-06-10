@@ -188,7 +188,7 @@ struct Question2View: View {
     }
     
     func postResposta(pergunta: String, resposta: String, descricao: String) {
-        guard let url = URL(string: "https://mysite-sdz6.onrender.com/indicadores") else { return }
+        guard let url = URL(string: "https://mysite-sdz6.onrender.com/api/indicadores/") else { return }
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
