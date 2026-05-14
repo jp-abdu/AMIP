@@ -17,6 +17,8 @@ class FormularioState: ObservableObject {
     @Published var q2_sexoSelecionado: String = ""
     @Published var q2_parentescoSelecionado: String = ""
     @Published var q2_situacaoDomicilioSelecionada: String = ""
+    @Published var q2_datasNascimentoMoradores: [String] = []
+    @Published var q2_datasAdicionais: [Date] = []
 
     // MARK: - Q3: Características do Domicílio
     @Published var q3_quantidadeComodos: String = ""

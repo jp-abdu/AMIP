@@ -2,14 +2,9 @@ import SwiftUI
 
 struct Question2View: View {
     @EnvironmentObject var estado: FormularioState
+    
+    // Variável local apenas para controle de interface (não precisa ir para a API)
     @State private var mostrandoSelecaoData = false
-    /*@State private var numeroMoradores = ""
-    @State private var nomeCompleto = ""
-    @State private var dataNascimento = Date()
-    @State private var dataNascimentoSelecionada = false
-    @State private var sexoSelecionado = ""
-    @State private var parentescoSelecionado = ""
-    @State private var situacaoDomicilioSelecionada = ""*/
     
     let opcoesSexo = ["Masculino", "Feminino"]
     
@@ -72,6 +67,18 @@ struct Question2View: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color(red: 218/255, green: 249/255, blue: 254/255))
                     .cornerRadius(20)
+                    // Atualiza a quantidade de DatePickers com base no número digitado
+                    .onChange(of: estado.q2_numeroMoradores) { newValue in
+                        let total = Int(newValue) ?? 1
+                        let qtdAdicionais = max(0, total - 1)
+                        
+                        if estado.q2_datasAdicionais.count < qtdAdicionais {
+                            let difference = qtdAdicionais - estado.q2_datasAdicionais.count
+                            estado.q2_datasAdicionais.append(contentsOf: Array(repeating: Date(), count: difference))
+                        } else if estado.q2_datasAdicionais.count > qtdAdicionais {
+                            estado.q2_datasAdicionais.removeLast(estado.q2_datasAdicionais.count - qtdAdicionais)
+                        }
+                    }
                     
                     VStack(alignment: .leading, spacing: 16) {
                         Text("Nome completo, data de nascimento e sexo do entrevistado:")
@@ -80,7 +87,7 @@ struct Question2View: View {
                         
                         LabeledTextFieldViews(title: "Nome Completo", text: $estado.q2_nomeCompleto)
                         
-                        // --------- CAMPO DE DATA -----------
+                        // --------- CAMPO DE DATA DA PESSOA 1 -----------
                         Group {
                             if mostrandoSelecaoData {
                                 VStack(spacing: 12) {
@@ -138,6 +145,38 @@ struct Question2View: View {
                     .background(Color(red: 218/255, green: 249/255, blue: 254/255))
                     .cornerRadius(20)
                     
+                    // Renderiza os DatePickers para os moradores adicionais
+                    if estado.q2_datasAdicionais.count > 0 {
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("Data de nascimento dos outros moradores:")
+                                .font(.headline)
+                                .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+                            
+                            ForEach(0..<estado.q2_datasAdicionais.count, id: \.self) { index in
+                                HStack {
+                                    Text("Morador \(index + 2)")
+                                        .font(.subheadline)
+                                    
+                                    Spacer()
+                                    
+                                    DatePicker(
+                                        "",
+                                        selection: $estado.q2_datasAdicionais[index],
+                                        displayedComponents: .date
+                                    )
+                                    .labelsHidden()
+                                    .environment(\.locale, Locale(identifier: "pt_BR"))
+                                }
+                                Divider()
+                            }
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color(red: 218/255, green: 249/255, blue: 254/255))
+                        .cornerRadius(20)
+                        .animation(.easeInOut, value: estado.q2_datasAdicionais.count)
+                    }
+                    
                     VStack(alignment: .leading, spacing: 16) {
                         Text("Relação de parentesco com a pessoa responsável pelo domicílio")
                             .font(.headline)
@@ -173,18 +212,27 @@ struct Question2View: View {
                                     !estado.q2_situacaoDomicilioSelecionada.isEmpty,
                         onNext: {
                             guard let id = FormularioManager.shared.formularioId else { return }
+
+                            // Converte os Dates gerados na UI para Strings no formato dd/MM/yyyy
+                            estado.q2_datasNascimentoMoradores = estado.q2_datasAdicionais.map { dateFormatter.string(from: $0) }
+
+                            // Monta o array com todas as datas (incluindo a do responsável)
+                            var todasAsDatas = [dateFormatter.string(from: estado.q2_dataNascimento)]
+                            todasAsDatas.append(contentsOf: estado.q2_datasNascimentoMoradores)
+
                             APIService.shared.enviarMoradores(
                                 id: id,
                                 numeroMoradores: Int(estado.q2_numeroMoradores) ?? 1,
                                 nomeCompleto: estado.q2_nomeCompleto,
                                 dataNascimento: dateFormatter.string(from: estado.q2_dataNascimento),
+                                datasNascimentoMoradores: todasAsDatas, // Envia o array conforme sua nova implementação
                                 sexo: estado.q2_sexoSelecionado,
                                 parentesco: estado.q2_parentescoSelecionado,
                                 situacaoDomicilio: estado.q2_situacaoDomicilioSelecionada
                             )
                         }
                     )
-
+                    
                 }
                 .padding()
             }
@@ -201,4 +249,3 @@ struct Question2View_Previews: PreviewProvider {
         }
     }
 }
-
