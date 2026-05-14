@@ -46,45 +46,55 @@ struct Question10View: View {
                         selecao: $algumMoradorTrabalha,
                         opcoes: opcoesSimNao
                     )
+                    .onChange(of: algumMoradorTrabalha) { newValue in
+                        // Limpa os campos abaixo caso o usuário mude a resposta para "Não"
+                        if newValue == "Não" {
+                            municipioPaisTrabalho = ""
+                            retornaTrabalho3DiasMais = ""
+                            tempoDeslocamento = 0.0
+                            meioTransporte = ""
+                        }
+                    }
                     
-                    // Bloco: Em que município ou país estrangeiro trabalha?
-                    blocoRadio(
-                        titulo: "EM QUE MUNICÍPIO OU PAÍS ESTRANGEIRO TRABALHA?",
-                        selecao: $municipioPaisTrabalho,
-                        opcoes: opcoesMunicipioPais
-                    )
-                    
-                    // Bloco: Retorna do trabalho para casa 3 dias ou mais na semana?
-                    blocoRadio(
-                        titulo: "RETORNA DO TRABALHO PARA CASA 3 DIAS OU MAIS NA SEMANA? (Considerar a semana de 7 dias)",
-                        selecao: $retornaTrabalho3DiasMais,
-                        opcoes: opcoesSimNao
-                    )
-                    
-                    // Bloco: Quanto tempo leva de sua casa até o local de trabalho normalmente?
-                    blocoSlider(
-                        titulo: "QUANTO TEMPO LEVA DE SUA CASA ATÉ O LOCAL DE TRABALHO NORMALMENTE?(Minutos)",
-                        valor: $tempoDeslocamento,
-                        rotuloMin: "0",
-                        rotuloMax: "100+",
-                        legenda: "Caso não se desloque, selecionar 0"
-                    )
-                    
-                    // Bloco: Qual o principal meio de transporte utilizado para chegar ao local de trabalho?
-                    blocoRadio(
-                        titulo: "QUAL O PRINCIPAL MEIO DE TRANSPORTE UTILIZADO PARA CHEGAR AO LOCAL DE TRABALHO?",
-                        selecao: $meioTransporte,
-                        opcoes: opcoesMeioTransporte
-                    )
+                    // Condicional: Exibe as perguntas de deslocamento apenas se alguém trabalhar
+                    if algumMoradorTrabalha == "Sim" {
+                        
+                        // Bloco: Em que município ou país estrangeiro trabalha?
+                        blocoRadio(
+                            titulo: "EM QUE MUNICÍPIO OU PAÍS ESTRANGEIRO TRABALHA?",
+                            selecao: $municipioPaisTrabalho,
+                            opcoes: opcoesMunicipioPais
+                        )
+                        
+                        // Bloco: Retorna do trabalho para casa 3 dias ou mais na semana?
+                        blocoRadio(
+                            titulo: "RETORNA DO TRABALHO PARA CASA 3 DIAS OU MAIS NA SEMANA? (Considerar a semana de 7 dias)",
+                            selecao: $retornaTrabalho3DiasMais,
+                            opcoes: opcoesSimNao
+                        )
+                        
+                        // Bloco: Quanto tempo leva de sua casa até o local de trabalho normalmente?
+                        blocoSlider(
+                            titulo: "QUANTO TEMPO LEVA DE SUA CASA ATÉ O LOCAL DE TRABALHO NORMALMENTE? (Minutos)",
+                            valor: $tempoDeslocamento,
+                            rotuloMin: "0",
+                            rotuloMax: "100+",
+                            legenda: "Caso não se desloque, selecionar 0"
+                        )
+                        
+                        // Bloco: Qual o principal meio de transporte utilizado para chegar ao local de trabalho?
+                        blocoRadio(
+                            titulo: "QUAL O PRINCIPAL MEIO DE TRANSPORTE UTILIZADO PARA CHEGAR AO LOCAL DE TRABALHO?",
+                            selecao: $meioTransporte,
+                            opcoes: opcoesMeioTransporte
+                        )
+                    }
                     
                     // Botões de navegação
                     FormNavigationButtonsRows(
                         backDestination: Question9View(),
                         nextDestination: Question11View(),
-                        canProceed: !algumMoradorTrabalha.isEmpty &&
-                                    !municipioPaisTrabalho.isEmpty &&
-                                    !retornaTrabalho3DiasMais.isEmpty &&
-                                    !meioTransporte.isEmpty,
+                        canProceed: isFormValid, // Utilizando a variável computada para manter a limpeza
                         onNext: {
                             guard let id = FormularioManager.shared.formularioId else { return }
                             APIService.shared.enviarDeslocamento(
@@ -100,12 +110,31 @@ struct Question10View: View {
 
                 }
                 .padding()
+                .animation(.easeInOut, value: algumMoradorTrabalha) // Adiciona transição suave
             }
         }
         .navigationBarHidden(true)
     }
     
-    // MARK: - Componentes reutilizáveis (adaptados ou copiados aqui para clareza)
+    // MARK: - Lógica de Validação
+    private var isFormValid: Bool {
+        // A primeira pergunta é sempre obrigatória
+        if algumMoradorTrabalha.isEmpty {
+            return false
+        }
+        
+        // Se ninguém trabalha, o formulário já está válido para avançar
+        if algumMoradorTrabalha == "Não" {
+            return true
+        } else {
+            // Se trabalha, exige as outras opções de rádio (o slider sempre tem um valor double padrão)
+            return !municipioPaisTrabalho.isEmpty &&
+                   !retornaTrabalho3DiasMais.isEmpty &&
+                   !meioTransporte.isEmpty
+        }
+    }
+    
+    // MARK: - Componentes reutilizáveis
     
     @ViewBuilder
     func blocoRadio(titulo: String, selecao: Binding<String>, opcoes: [String]) -> some View {
@@ -116,7 +145,7 @@ struct Question10View: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
-            RadioGroupViews(options: opcoes, selected: selecao) // Assumindo RadioGroupViews é um componente existente
+            RadioGroupViews(options: opcoes, selected: selecao)
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -133,8 +162,8 @@ struct Question10View: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
-            Slider(value: valor, in: 0...100, step: 1) // Ajuste o 'in' e 'step' conforme sua necessidade, 100 pode ser o max de minutos
-                .tint(Color(red: 0.0, green: 0.3, blue: 0.3)) // Cor do slider
+            Slider(value: valor, in: 0...100, step: 1)
+                .tint(Color(red: 0.0, green: 0.3, blue: 0.3))
             
             HStack {
                 Text(rotuloMin)

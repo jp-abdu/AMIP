@@ -43,11 +43,11 @@ struct Question9View: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading, 7.5)
                     
-                    // Bloco: Quantas pessoas sabem ler e escrever? (Usando blocoPergunta adaptado para Picker)
+                    // Bloco: Quantas pessoas sabem ler e escrever? (Sempre visível)
                     blocoPergunta(
                         titulo: "QUANTAS PESSOAS SABEM LER E ESCREVER?",
                         selecao: $pessoasSabemLerEscrever,
-                        opcoesPicker: opcoesNumericas // Passando as opções para o Picker
+                        opcoesPicker: opcoesNumericas
                     )
                     
                     // Bloco: FREQUENTA ESCOLA OU CRECHE?
@@ -56,29 +56,37 @@ struct Question9View: View {
                         selecao: $frequentaEscolaCreche,
                         opcoes: opcoesFrequentaEscola
                     )
+                    .onChange(of: frequentaEscolaCreche) { newValue in
+                        // Limpa os dados dos cursos caso o usuário responda que nunca frequentou
+                        if newValue == "Não, nunca frequentou" {
+                            cursoQueFrequenta = ""
+                            concluiuOutroSuperior = ""
+                        }
+                    }
                     
-                    // Bloco: QUAL É O CURSO QUE FREQUENTA?
-                    blocoRadio(
-                        titulo: "QUAL É O CURSO QUE FREQUENTA?",
-                        selecao: $cursoQueFrequenta,
-                        opcoes: opcoesCursoFrequenta
-                    )
-                    
-                    // Bloco: JÁ CONCLUIU ALGUM OUTRO CURSO SUPERIOR DE GRADUAÇÃO?
-                    blocoRadio(
-                        titulo: "JÁ CONCLUIU ALGUM OUTRO CURSO SUPERIOR DE GRADUAÇÃO?",
-                        selecao: $concluiuOutroSuperior,
-                        opcoes: opcoesSimNao
-                    )
+                    // Condicional: Só exibe as perguntas seguintes se o usuário frequenta ou já frequentou
+                    if frequentaEscolaCreche == "Sim" || frequentaEscolaCreche == "Não, mas já frequentou" {
+                        
+                        // Bloco: QUAL É O CURSO QUE FREQUENTA?
+                        blocoRadio(
+                            titulo: "QUAL É O CURSO QUE FREQUENTA/FREQUENTOU?",
+                            selecao: $cursoQueFrequenta,
+                            opcoes: opcoesCursoFrequenta
+                        )
+                        
+                        // Bloco: JÁ CONCLUIU ALGUM OUTRO CURSO SUPERIOR DE GRADUAÇÃO?
+                        blocoRadio(
+                            titulo: "JÁ CONCLUIU ALGUM OUTRO CURSO SUPERIOR DE GRADUAÇÃO?",
+                            selecao: $concluiuOutroSuperior,
+                            opcoes: opcoesSimNao
+                        )
+                    }
                     
                     // Botões de navegação
                     FormNavigationButtonsRows(
                         backDestination: Question8View(),
                         nextDestination: Question10View(),
-                        canProceed: pessoasSabemLerEscrever != "Selecione" &&
-                                    !frequentaEscolaCreche.isEmpty &&
-                                    !cursoQueFrequenta.isEmpty &&
-                                    !concluiuOutroSuperior.isEmpty,
+                        canProceed: isFormValid, // Utilizando a variável computada para validação
                         onNext: {
                             guard let id = FormularioManager.shared.formularioId else { return }
                             APIService.shared.enviarEducacao(
@@ -93,12 +101,29 @@ struct Question9View: View {
 
                 }
                 .padding()
+                .animation(.easeInOut, value: frequentaEscolaCreche) // Transição suave ao mostrar/ocultar
             }
         }
         .navigationBarHidden(true)
     }
     
-    // MARK: - Componentes reutilizáveis (adaptados ou copiados aqui para clareza)
+    // MARK: - Lógica de Validação
+    private var isFormValid: Bool {
+        // A pergunta de ler/escrever e a de frequentar escola são sempre obrigatórias
+        if pessoasSabemLerEscrever == "Selecione" || frequentaEscolaCreche.isEmpty {
+            return false
+        }
+        
+        // Se nunca frequentou, já está validado e pode avançar
+        if frequentaEscolaCreche == "Não, nunca frequentou" {
+            return true
+        } else {
+            // Se frequenta ou já frequentou, exige as respostas sobre os cursos
+            return !cursoQueFrequenta.isEmpty && !concluiuOutroSuperior.isEmpty
+        }
+    }
+    
+    // MARK: - Componentes reutilizáveis
     
     @ViewBuilder
     func blocoPergunta(titulo: String, selecao: Binding<String>, opcoesPicker: [String]) -> some View {
@@ -135,7 +160,7 @@ struct Question9View: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
-            RadioGroupViews(options: opcoes, selected: selecao) // Assumindo RadioGroupViews é um componente existente
+            RadioGroupViews(options: opcoes, selected: selecao)
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)

@@ -9,6 +9,10 @@ struct Question2View: View {
     @State private var sexoSelecionado = ""
     @State private var parentescoSelecionado = ""
     @State private var situacaoDomicilioSelecionada = ""
+    @State private var datasNascimentoMoradores: [String] = []
+    
+    // NOVO: Array de Dates para fazer o binding com os DatePickers gerados dinamicamente
+    @State private var datasAdicionais: [Date] = []
     
     let opcoesSexo = ["Masculino", "Feminino"]
     
@@ -71,6 +75,20 @@ struct Question2View: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color(red: 218/255, green: 249/255, blue: 254/255))
                     .cornerRadius(20)
+                    // NOVO: Atualiza a quantidade de DatePickers com base no número digitado
+                    .onChange(of: numeroMoradores) { newValue in
+                        let total = Int(newValue) ?? 1
+                        // Subtraímos 1 assumindo que o total inclui o entrevistado.
+                        // Ex: Se moram 3, criará 2 campos extras. Se a regra for diferente, mude para: let qtdAdicionais = total
+                        let qtdAdicionais = max(0, total - 1)
+                        
+                        if datasAdicionais.count < qtdAdicionais {
+                            let difference = qtdAdicionais - datasAdicionais.count
+                            datasAdicionais.append(contentsOf: Array(repeating: Date(), count: difference))
+                        } else if datasAdicionais.count > qtdAdicionais {
+                            datasAdicionais.removeLast(datasAdicionais.count - qtdAdicionais)
+                        }
+                    }
                     
                     VStack(alignment: .leading, spacing: 16) {
                         Text("Nome completo, data de nascimento e sexo do entrevistado:")
@@ -79,7 +97,7 @@ struct Question2View: View {
                         
                         LabeledTextFieldViews(title: "Nome Completo", text: $nomeCompleto)
                         
-                        // --------- CAMPO DE DATA -----------
+                        // --------- CAMPO DE DATA DA PESSOA 1 -----------
                         Group {
                             if mostrandoSelecaoData {
                                 VStack(spacing: 12) {
@@ -137,6 +155,38 @@ struct Question2View: View {
                     .background(Color(red: 218/255, green: 249/255, blue: 254/255))
                     .cornerRadius(20)
                     
+                    // NOVO: Renderiza os DatePickers para os moradores adicionais
+                    if datasAdicionais.count > 0 {
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("Data de nascimento dos outros moradores:")
+                                .font(.headline)
+                                .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+                            
+                            ForEach(0..<datasAdicionais.count, id: \.self) { index in
+                                HStack {
+                                    Text("Morador \(index + 2)")
+                                        .font(.subheadline)
+                                    
+                                    Spacer()
+                                    
+                                    DatePicker(
+                                        "",
+                                        selection: $datasAdicionais[index],
+                                        displayedComponents: .date
+                                    )
+                                    .labelsHidden()
+                                    .environment(\.locale, Locale(identifier: "pt_BR"))
+                                }
+                                Divider()
+                            }
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color(red: 218/255, green: 249/255, blue: 254/255))
+                        .cornerRadius(20)
+                        .animation(.easeInOut, value: datasAdicionais.count) // Transição suave ao adicionar/remover
+                    }
+                    
                     VStack(alignment: .leading, spacing: 16) {
                         Text("Relação de parentesco com a pessoa responsável pelo domicílio")
                             .font(.headline)
@@ -172,11 +222,20 @@ struct Question2View: View {
                                     !situacaoDomicilioSelecionada.isEmpty,
                         onNext: {
                             guard let id = FormularioManager.shared.formularioId else { return }
+
+                            // NOVO: Converte os Dates gerados na UI para Strings no formato dd/MM/yyyy
+                            datasNascimentoMoradores = datasAdicionais.map { dateFormatter.string(from: $0) }
+
+                            // Monta o array com todas as datas (incluindo a do responsável)
+                            var todasAsDatas = [dateFormatter.string(from: dataNascimento)]
+                            todasAsDatas.append(contentsOf: datasNascimentoMoradores)
+
                             APIService.shared.enviarMoradores(
                                 id: id,
                                 numeroMoradores: Int(numeroMoradores) ?? 1,
                                 nomeCompleto: nomeCompleto,
                                 dataNascimento: dateFormatter.string(from: dataNascimento),
+                                datasNascimentoMoradores: todasAsDatas,
                                 sexo: sexoSelecionado,
                                 parentesco: parentescoSelecionado,
                                 situacaoDomicilio: situacaoDomicilioSelecionada
@@ -199,4 +258,3 @@ struct Question2View_Previews: PreviewProvider {
         }
     }
 }
-
