@@ -86,11 +86,15 @@ struct Question10View: View {
                                     !retornaTrabalho3DiasMais.isEmpty &&
                                     !meioTransporte.isEmpty,
                         onNext: {
-                            postResposta(pergunta: "Algum morador trabalha", resposta: algumMoradorTrabalha, descricao: "Se há moradores com trabalho")
-                            postResposta(pergunta: "Município ou país do trabalho", resposta: municipioPaisTrabalho, descricao: "Local onde o morador trabalha")
-                            postResposta(pergunta: "Retorna do trabalho 3 dias ou mais", resposta: retornaTrabalho3DiasMais, descricao: "Frequência de retorno para casa")
-                            postResposta(pergunta: "Tempo de deslocamento", resposta: String(format: "%.0f", tempoDeslocamento), descricao: "Tempo em minutos até o trabalho")
-                            postResposta(pergunta: "Meio de transporte", resposta: meioTransporte, descricao: "Principal meio utilizado para trabalhar")
+                            guard let id = FormularioManager.shared.formularioId else { return }
+                            APIService.shared.enviarDeslocamento(
+                                id: id,
+                                algumMoradorTrabalha: algumMoradorTrabalha,
+                                municipio: municipioPaisTrabalho,
+                                retorna3Dias: retornaTrabalho3DiasMais,
+                                tempoMinutos: Int(tempoDeslocamento),
+                                meioTransporte: meioTransporte
+                            )
                         }
                     )
 
@@ -99,35 +103,6 @@ struct Question10View: View {
             }
         }
         .navigationBarHidden(true)
-    }
-    
-    func postResposta(pergunta: String, resposta: String, descricao: String) {
-        guard let url = URL(string: "https://mysite-sdz6.onrender.com/api/indicadores/") else { return }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let json: [String: String] = [
-            "pergunta": pergunta,
-            "resposta": resposta,
-            "descricao": descricao
-        ]
-
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
-            request.httpBody = jsonData
-
-            URLSession.shared.dataTask(with: request) { _, response, error in
-                if let error = error {
-                    print("Erro ao enviar: \(error)")
-                } else if let response = response as? HTTPURLResponse {
-                    print("Status: \(response.statusCode)")
-                }
-            }.resume()
-        } catch {
-            print("Erro ao converter JSON: \(error)")
-        }
     }
     
     // MARK: - Componentes reutilizáveis (adaptados ou copiados aqui para clareza)

@@ -87,13 +87,17 @@ struct Question6View: View {
                                 !possuiCNPJ.isEmpty &&
                                 !faixaRendimento.isEmpty,
                     onNext: {
-                        postResposta(pergunta: "Trabalho remunerado", resposta: trabalhouRemunerado, descricao: "Teve ocupação remunerada")
-                        postResposta(pergunta: "Quantidade de trabalhos", resposta: quantidadeTrabalhos, descricao: "Número de ocupações recentes")
-                        postResposta(pergunta: "Ocupação", resposta: ocupacao, descricao: "Cargo/função principal")
-                        postResposta(pergunta: "Atividade principal", resposta: atividadePrincipal, descricao: "Atividade da empresa")
-                        postResposta(pergunta: "Carteira assinada", resposta: carteiraAssinada, descricao: "Possui registro em carteira")
-                        postResposta(pergunta: "CNPJ", resposta: possuiCNPJ, descricao: "Negócio era registrado")
-                        postResposta(pergunta: "Faixa de rendimento", resposta: faixaRendimento, descricao: "Rendimento mensal estimado")
+                        guard let id = FormularioManager.shared.formularioId else { return }
+                        APIService.shared.enviarTrabalho(
+                            id: id,
+                            trabalhouRemunerado: trabalhouRemunerado,
+                            quantidadeTrabalhos: quantidadeTrabalhos,
+                            ocupacao: ocupacao,
+                            atividadePrincipal: atividadePrincipal,
+                            carteiraAssinada: carteiraAssinada,
+                            possuiCNPJ: possuiCNPJ,
+                            faixaRendimento: faixaRendimento
+                        )
                     }
                 )
 
@@ -103,37 +107,8 @@ struct Question6View: View {
         }
     }
 }
-    
-    func postResposta(pergunta: String, resposta: String, descricao: String) {
-        guard let url = URL(string: "https://mysite-sdz6.onrender.com/api/indicadores/") else { return }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let json: [String: String] = [
-            "pergunta": pergunta,
-            "resposta": resposta,
-            "descricao": descricao
-        ]
-
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
-            request.httpBody = jsonData
-
-            URLSession.shared.dataTask(with: request) { _, response, error in
-                if let error = error {
-                    print("Erro ao enviar: \(error)")
-                } else if let response = response as? HTTPURLResponse {
-                    print("Status: \(response.statusCode)")
-                }
-            }.resume()
-        } catch {
-            print("Erro ao converter JSON: \(error)")
-        }
-    }
-
 }
+    
 struct FormSectionView<Content: View>: View {
     let title: String
     let content: Content

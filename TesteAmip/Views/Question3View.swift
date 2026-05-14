@@ -47,12 +47,16 @@ struct Question3View: View {
                                     !acessoInternet.isEmpty &&
                                     !possuiMaquinaLavar.isEmpty,
                         onNext: {
-                            postResposta(pergunta: "Cômodos", resposta: quantidadeComodos, descricao: "Quantidade total de cômodos")
-                            postResposta(pergunta: "Dormitórios", resposta: quantidadeDormitorios, descricao: "Número de dormitórios")
-                            postResposta(pergunta: "Banheiros com chuveiro", resposta: quantidadeBanheirosCom, descricao: "Banheiros com chuveiro e vaso")
-                            postResposta(pergunta: "Banheiros sem chuveiro", resposta: quantidadeBanheirosSem, descricao: "Banheiros sem chuveiro")
-                            postResposta(pergunta: "Acesso à internet", resposta: acessoInternet, descricao: "Conectividade no domicílio")
-                            postResposta(pergunta: "Máquina de lavar", resposta: possuiMaquinaLavar, descricao: "Presença de máquina de lavar")
+                            guard let id = FormularioManager.shared.formularioId else { return }
+                            APIService.shared.enviarCaracteristicas(
+                                id: id,
+                                comodos: quantidadeComodos,
+                                dormitorios: quantidadeDormitorios,
+                                banheirosCom: quantidadeBanheirosCom,
+                                banheirosSem: quantidadeBanheirosSem,
+                                internet: acessoInternet,
+                                maquinaLavar: possuiMaquinaLavar
+                            )
                         }
                     )
 
@@ -61,35 +65,6 @@ struct Question3View: View {
             }
         }
         .navigationBarHidden(true)
-    }
-    
-    func postResposta(pergunta: String, resposta: String, descricao: String) {
-        guard let url = URL(string: "https://mysite-sdz6.onrender.com/api/indicadores/") else { return }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let json: [String: String] = [
-            "pergunta": pergunta,
-            "resposta": resposta,
-            "descricao": descricao
-        ]
-
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
-            request.httpBody = jsonData
-
-            URLSession.shared.dataTask(with: request) { _, response, error in
-                if let error = error {
-                    print("Erro ao enviar: \(error)")
-                } else if let response = response as? HTTPURLResponse {
-                    print("Status: \(response.statusCode)")
-                }
-            }.resume()
-        } catch {
-            print("Erro ao converter JSON: \(error)")
-        }
     }
     
     // MARK: - Componentes reutilizáveis

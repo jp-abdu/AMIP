@@ -98,17 +98,15 @@ struct Question1View: View {
                                     !especieSelecionada.isEmpty &&
                                     !tipoSelecionado.isEmpty,
                         onNext: {
-                            let respostas: [(String, String, String)] = [
-                                ("Rua", ruaSelecionada, "Endereço do domicílio"),
-                                ("Número", numero, "Número do endereço"),
-                                ("Complemento", complemento, "Complemento do endereço"),
-                                ("Espécie de domicílio", especieSelecionada, "Tipo de ocupação"),
-                                ("Tipo de domicílio", tipoSelecionado, "Tipo de construção")
-                            ]
-
-                            for item in respostas {
-                                postResposta(pergunta: item.0, resposta: item.1, descricao: item.2)
-                            }
+                            guard let id = FormularioManager.shared.formularioId else { return }
+                            APIService.shared.enviarDomicilio(
+                                id: id,
+                                rua: ruaSelecionada,
+                                numero: numero,
+                                complemento: complemento,
+                                especie: especieSelecionada,
+                                tipo: tipoSelecionado
+                            )
                         }
                     )
                 }
@@ -118,36 +116,6 @@ struct Question1View: View {
         .navigationBarHidden(true)
         
     }
-    
-    func postResposta(pergunta: String, resposta: String, descricao: String) {
-        guard let url = URL(string: "https://mysite-sdz6.onrender.com/api/indicadores/") else { return }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let json: [String: String] = [
-            "pergunta": pergunta,
-            "resposta": resposta,
-            "descricao": descricao
-        ]
-
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
-            request.httpBody = jsonData
-
-            URLSession.shared.dataTask(with: request) { _, response, error in
-                if let error = error {
-                    print("Erro ao enviar: \(error)")
-                } else if let response = response as? HTTPURLResponse {
-                    print("Status: \(response.statusCode)")
-                }
-            }.resume()
-        } catch {
-            print("Erro ao converter JSON: \(error)")
-        }
-    }
-
 }
 
 struct Question1View_Previews: PreviewProvider {

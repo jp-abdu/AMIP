@@ -51,11 +51,15 @@ struct Question7View: View {
                                     !idadeFalecido.isEmpty &&
                                     !sexoFalecido.isEmpty,
                         onNext: {
-                            postResposta(pergunta: "Houve falecimento", resposta: faleceuPessoa, descricao: "Se alguém faleceu no domicílio")
-                            postResposta(pergunta: "Data do falecimento", resposta: dateFormatter.string(from: dataFalecimento), descricao: "Data em que ocorreu o falecimento")
-                            postResposta(pergunta: "Nome do falecido", resposta: nomeCompletoFalecido, descricao: "Nome completo da pessoa falecida")
-                            postResposta(pergunta: "Idade do falecido", resposta: idadeFalecido, descricao: "Idade da pessoa falecida")
-                            postResposta(pergunta: "Sexo do falecido", resposta: sexoFalecido, descricao: "Sexo da pessoa falecida")
+                            guard let id = FormularioManager.shared.formularioId else { return }
+                            APIService.shared.enviarMortalidade(
+                                id: id,
+                                houveFalecimento: faleceuPessoa,
+                                dataFalecimento: dateFormatter.string(from: dataFalecimento),
+                                nomeFalecido: nomeCompletoFalecido.isEmpty ? nil : nomeCompletoFalecido,
+                                idadeFalecido: idadeFalecido.isEmpty ? nil : idadeFalecido,
+                                sexoFalecido: sexoFalecido.isEmpty ? nil : sexoFalecido
+                            )
                         }
                     )
 
@@ -64,35 +68,6 @@ struct Question7View: View {
             }
         }
         .navigationBarHidden(true)
-    }
-    
-    func postResposta(pergunta: String, resposta: String, descricao: String) {
-        guard let url = URL(string: "https://mysite-sdz6.onrender.com/api/indicadores/") else { return }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let json: [String: String] = [
-            "pergunta": pergunta,
-            "resposta": resposta,
-            "descricao": descricao
-        ]
-
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
-            request.httpBody = jsonData
-
-            URLSession.shared.dataTask(with: request) { _, response, error in
-                if let error = error {
-                    print("Erro ao enviar: \(error)")
-                } else if let response = response as? HTTPURLResponse {
-                    print("Status: \(response.statusCode)")
-                }
-            }.resume()
-        } catch {
-            print("Erro ao converter JSON: \(error)")
-        }
     }
     
     // MARK: - Componentes reutilizáveis
