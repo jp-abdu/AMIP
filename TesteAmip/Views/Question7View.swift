@@ -2,7 +2,7 @@ import SwiftUI
 
 struct Question7View: View {
     @State private var faleceuPessoa: String = ""
-    @State private var dataFalecimento: Date = Date() // Agora é Date
+    @State private var dataFalecimento: Date = Date()
     @State private var nomeCompletoFalecido: String = ""
     @State private var idadeFalecido: String = ""
     @State private var sexoFalecido: String = ""
@@ -14,6 +14,17 @@ struct Question7View: View {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM/yyyy"
         return formatter
+    }
+
+    // Se "Não", só exige a resposta principal
+    var canProceed: Bool {
+        if faleceuPessoa == "Não" {
+            return true
+        }
+        return faleceuPessoa == "Sim" &&
+               !nomeCompletoFalecido.isEmpty &&
+               !idadeFalecido.isEmpty &&
+               !sexoFalecido.isEmpty
     }
     
     var body: some View {
@@ -29,45 +40,56 @@ struct Question7View: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading, 7.5)
                     
-                    blocoRadio(titulo: "FALECEU ALGUMA PESSOA QUE MORAVA COM VOCÊ(S) NOS ULTIMOS DOIS ANOS(OU DESDE O ULTIMO SENSO)?", selecao: $faleceuPessoa, opcoes: opcoesSimNao)
-                    
-                    // DatePicker centralizado
-                    blocoDatePicker(
-                        titulo: "DATA DO FALECIMENTO:",
-                        data: $dataFalecimento
+                    blocoRadio(
+                        titulo: "FALECEU ALGUMA PESSOA QUE MORAVA COM VOCÊ(S) NOS ULTIMOS DOIS ANOS(OU DESDE O ULTIMO SENSO)?",
+                        selecao: $faleceuPessoa,
+                        opcoes: opcoesSimNao
                     )
                     
-                    blocoDadosFalecido(
-                        nome: $nomeCompletoFalecido,
-                        idade: $idadeFalecido,
-                        sexo: $sexoFalecido
-                    )
+                    // Campos extras só aparecem se houve falecimento
+                    if faleceuPessoa == "Sim" {
+                        blocoDatePicker(
+                            titulo: "DATA DO FALECIMENTO:",
+                            data: $dataFalecimento
+                        )
+                        
+                        blocoDadosFalecido(
+                            nome: $nomeCompletoFalecido,
+                            idade: $idadeFalecido,
+                            sexo: $sexoFalecido
+                        )
+                    }
                     
                     FormNavigationButtonsRows(
                         backDestination: Question6View(),
                         nextDestination: Question8View(),
-                        canProceed: !faleceuPessoa.isEmpty &&
-                                    !nomeCompletoFalecido.isEmpty &&
-                                    !idadeFalecido.isEmpty &&
-                                    !sexoFalecido.isEmpty,
+                        canProceed: canProceed,
                         onNext: {
                             guard let id = FormularioManager.shared.formularioId else { return }
                             APIService.shared.enviarMortalidade(
                                 id: id,
                                 houveFalecimento: faleceuPessoa,
-                                dataFalecimento: dateFormatter.string(from: dataFalecimento),
+                                dataFalecimento: faleceuPessoa == "Sim" ? dateFormatter.string(from: dataFalecimento) : nil,
                                 nomeFalecido: nomeCompletoFalecido.isEmpty ? nil : nomeCompletoFalecido,
                                 idadeFalecido: idadeFalecido.isEmpty ? nil : idadeFalecido,
                                 sexoFalecido: sexoFalecido.isEmpty ? nil : sexoFalecido
                             )
                         }
                     )
-
                 }
                 .padding()
             }
         }
         .navigationBarHidden(true)
+        // Limpa os campos de falecido ao trocar para "Não"
+        .onChange(of: faleceuPessoa) { novoValor in
+            if novoValor == "Não" {
+                nomeCompletoFalecido = ""
+                idadeFalecido = ""
+                sexoFalecido = ""
+                dataFalecimento = Date()
+            }
+        }
     }
     
     // MARK: - Componentes reutilizáveis
@@ -89,7 +111,6 @@ struct Question7View: View {
         .cornerRadius(20)
     }
 
-    // NOVO: bloco para o DatePicker centralizado
     @ViewBuilder
     func blocoDatePicker(titulo: String, data: Binding<Date>) -> some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -99,7 +120,6 @@ struct Question7View: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
-            // O segredo está aqui!
             HStack {
                 Spacer()
                 DatePicker(
@@ -107,9 +127,7 @@ struct Question7View: View {
                     selection: data,
                     displayedComponents: .date
                 )
-                // Troque o estilo aqui conforme desejar:
-                // .datePickerStyle(.compact) // Centraliza só em alguns devices/iOS
-                .datePickerStyle(.wheel)     // Centraliza em todos!
+                .datePickerStyle(.wheel)
                 .environment(\.locale, Locale(identifier: "pt_BR"))
                 Spacer()
             }
