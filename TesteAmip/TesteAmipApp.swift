@@ -1,10 +1,13 @@
 import SwiftUI
 
 @main
-struct AMIPQuestionarioApp: App {
+struct MeuApp: App {
+    @StateObject private var formularioState = FormularioState()
+
     var body: some Scene {
         WindowGroup {
             SplashView()
+                .environmentObject(formularioState)
         }
     }
 }
