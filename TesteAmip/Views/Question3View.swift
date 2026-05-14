@@ -8,7 +8,7 @@ struct Question3View: View {
     @State private var acessoInternet = ""
     @State private var possuiMaquinaLavar = ""
     
-    let opcoesNumericas = ["Selecione", "1", "2", "3", "4", "5", "6", "7+"]
+    let opcoesNumericas = ["Selecione", "0", "1", "2", "3", "4", "5", "6", "7+"]
     let opcoesSimNao = ["Sim", "Não"]
     
     var body: some View {
