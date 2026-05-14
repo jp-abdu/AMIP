@@ -84,16 +84,7 @@ struct Question9View: View {
                         backDestination: Question8View(),
                         nextDestination: Question10View(),
                         canProceed: isFormValid, // Utilizando a variável computada para validação
-                        onNext: {
-                            guard let id = FormularioManager.shared.formularioId else { return }
-                            APIService.shared.enviarEducacao(
-                                id: id,
-                                pessoasSabemLer: estado.q9_pessoasSabemLerEscrever,
-                                frequentaEscola: estado.q9_frequentaEscolaCreche,
-                                cursoFrequentado: estado.q9_cursoQueFrequenta,
-                                concluiuSuperior: estado.q9_concluiuOutroSuperior
-                            )
-                        }
+                        onNext: {}
                     )
                     
                 }

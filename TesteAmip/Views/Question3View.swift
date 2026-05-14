@@ -11,12 +11,8 @@ struct Question3View: View {
     @State private var possuiMaquinaLavar = ""
 <<<<<<< HEAD
     */
-     
-    let opcoesNumericas = ["Selecione", "1", "2", "3", "4", "5", "6", "7+"]
-=======
-    
+
     let opcoesNumericas = ["Selecione", "0", "1", "2", "3", "4", "5", "6", "7+"]
->>>>>>> main
     let opcoesSimNao = ["Sim", "Não"]
     
     var body: some View {
@@ -54,18 +50,7 @@ struct Question3View: View {
                                     estado.q3_quantidadeBanheirosSem != "Selecione" &&
                                     !estado.q3_acessoInternet.isEmpty &&
                                     !estado.q3_possuiMaquinaLavar.isEmpty,
-                        onNext: {
-                            guard let id = FormularioManager.shared.formularioId else { return }
-                            APIService.shared.enviarCaracteristicas(
-                                id: id,
-                                comodos: estado.q3_quantidadeComodos,
-                                dormitorios: estado.q3_quantidadeDormitorios,
-                                banheirosCom: estado.q3_quantidadeBanheirosCom,
-                                banheirosSem: estado.q3_quantidadeBanheirosSem,
-                                internet: estado.q3_acessoInternet,
-                                maquinaLavar: estado.q3_possuiMaquinaLavar
-                            )
-                        }
+                        onNext: {}
                     )
 
                 }

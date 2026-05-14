@@ -212,27 +212,7 @@ struct Question2View: View {
                                     !estado.q2_sexoSelecionado.isEmpty &&
                                     !estado.q2_parentescoSelecionado.isEmpty &&
                                     !estado.q2_situacaoDomicilioSelecionada.isEmpty,
-                        onNext: {
-                            guard let id = FormularioManager.shared.formularioId else { return }
-
-                            // NOVO: Converte os Dates gerados na UI para Strings no formato dd/MM/yyyy
-                            estado.q2_datasNascimentoMoradores = estado.q2_datasAdicionais.map { dateFormatter.string(from: $0) }
-
-                            // Monta o array com todas as datas (incluindo a do responsável)
-                            var todasAsDatas = [dateFormatter.string(from: estado.q2_dataNascimento)]
-                            todasAsDatas.append(contentsOf: estado.q2_datasNascimentoMoradores)
-
-                            APIService.shared.enviarMoradores(
-                                id: id,
-                                numeroMoradores: Int(estado.q2_numeroMoradores) ?? 1,
-                                nomeCompleto: estado.q2_nomeCompleto,
-                                dataNascimento: dateFormatter.string(from: estado.q2_dataNascimento),
-                                datasNascimentoMoradores: todasAsDatas, // Envia o array conforme sua nova implementação
-                                sexo: estado.q2_sexoSelecionado,
-                                parentesco: estado.q2_parentescoSelecionado,
-                                situacaoDomicilio: estado.q2_situacaoDomicilioSelecionada
-                            )
-                        }
+                        onNext: {}
                     )
                     
                 }

@@ -56,15 +56,7 @@ struct Question8View: View {
                         canProceed: !estado.q8_dificuldadeEnxergar.isEmpty &&
                                     !estado.q8_dificuldadeOuvir.isEmpty &&
                                     !estado.q8_dificuldadeAndar.isEmpty,
-                        onNext: {
-                            guard let id = FormularioManager.shared.formularioId else { return }
-                            APIService.shared.enviarDeficiencia(
-                                id: id,
-                                enxergar: estado.q8_dificuldadeEnxergar,
-                                ouvir: estado.q8_dificuldadeOuvir,
-                                andar: estado.q8_dificuldadeAndar
-                            )
-                        }
+                        onNext: {}
                     )
 
                 }

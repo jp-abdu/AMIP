@@ -41,10 +41,7 @@ struct Question11View: View {
                         backDestination: Question10View(),
                         nextDestination: Question12View(),
                         canProceed: !estado.q11_religiaoSelecionada.isEmpty,
-                        onNext: {
-                            guard let id = FormularioManager.shared.formularioId else { return }
-                            APIService.shared.enviarReligiao(id: id, religiao: estado.q11_religiaoSelecionada)
-                        }
+                        onNext: {}
                     )
 
                 }

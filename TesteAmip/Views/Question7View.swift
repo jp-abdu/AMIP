@@ -67,17 +67,7 @@ struct Question7View: View {
                         backDestination: Question6View(),
                         nextDestination: Question8View(),
                         canProceed: canProceed,
-                        onNext: {
-                            guard let id = FormularioManager.shared.formularioId else { return }
-                            APIService.shared.enviarMortalidade(
-                                id: id,
-                                houveFalecimento: estado.q7_faleceuPessoa,
-                                dataFalecimento: estado.q7_faleceuPessoa == "Sim" ? dateFormatter.string(from: estado.q7_dataFalecimento) : nil,
-                                nomeFalecido: estado.q7_nomeCompletoFalecido.isEmpty ? nil : estado.q7_nomeCompletoFalecido,
-                                idadeFalecido: estado.q7_idadeFalecido.isEmpty ? nil : estado.q7_idadeFalecido,
-                                sexoFalecido: estado.q7_sexoFalecido.isEmpty ? nil : estado.q7_sexoFalecido
-                            )
-                        }
+                        onNext: {}
                     )
                 }
                 .padding()

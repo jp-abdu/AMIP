@@ -85,20 +85,9 @@ struct Question6View: View {
                         nextDestination: Question7View(),
                         canProceed: isFormValid, // Usando a variável computada
                         onNext: {
-                            guard let id = FormularioManager.shared.formularioId else { return }
-                            APIService.shared.enviarTrabalho(
-                                id: id,
-                                trabalhouRemunerado: estado.q6_trabalhouRemunerado,
-                                quantidadeTrabalhos: estado.q6_quantidadeTrabalhos,
-                                ocupacao: estado.q6_ocupacao,
-                                atividadePrincipal: estado.q6_atividadePrincipal,
-                                carteiraAssinada: estado.q6_carteiraAssinada,
-                                possuiCNPJ: estado.q6_possuiCNPJ,
-                                faixaRendimento: estado.q6_faixaRendimento
-                            )
+                            // Envio em lote centralizado na ResumoView
                         }
                     )
-
                 }
                 .padding()
                 .animation(.easeInOut, value: estado.q6_trabalhouRemunerado) // Transição suave ao expandir/recolher

@@ -2,36 +2,45 @@ import SwiftUI
 
 struct FormularioEnviadoView: View {
     @Environment(\.presentationMode) var presentationMode
+    
+    // 1. Injetamos o estado para podermos limpar os dados
+    @EnvironmentObject var estado: FormularioState
 
     var body: some View {
-        //ZStack(alignment: .center){
         VStack(spacing: 30) {
             Spacer()
+            
             Image("certo")
                 .resizable()
                 .scaledToFit()
                 .frame(height: 125) // Diminui um pouco para garantir que cabe
                 .padding(.horizontal, 16)
+            
             Text("Formulário enviado com sucesso!")
                 .font(.title2)
                 .bold()
                 .multilineTextAlignment(.center)
+            
             NavigationLink(destination: HomeView()) {
-            Text("Voltar à Home")
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(Color.blue)
-            .foregroundColor(.white)
-            .cornerRadius(10)
-            .padding(.horizontal)
+                Text("Voltar à Home")
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                    .padding(.horizontal)
             }
+            // 2. A mágica acontece aqui: ao tocar no link, limpamos a memória e o ID
+            .simultaneousGesture(TapGesture().onEnded {
+                estado.limparFormulario()
+                FormularioManager.shared.formularioId = nil
+            })
 
             Spacer()
         }
         .padding()
         .background(Color(red: 0.85, green: 1.0, blue: 1.0).ignoresSafeArea())
         .navigationBarBackButtonHidden(true)
-    //}
     }
 }
 
@@ -39,6 +48,7 @@ struct FormularioEnviadoView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             FormularioEnviadoView()
+                .environmentObject(FormularioState()) // Adicionado para não quebrar o Preview
         }
     }
 }

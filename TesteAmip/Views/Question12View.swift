@@ -30,16 +30,11 @@ struct Question12View: View {
                     
                     // Botões de navegação
                     FormNavigationButtonsRows(
-                        backDestination: Question11View(),
-                        nextDestination: FormularioEnviadoView(),
-                        canProceed: !estado.q12_diagnosticadoComAutismo.isEmpty,
-                        onNext: {
-                            guard let id = FormularioManager.shared.formularioId else { return }
-                            APIService.shared.enviarAutismo(id: id, diagnosticado: estado.q12_diagnosticadoComAutismo)
-                            // Finaliza o formulário ao enviar a última seção
-                            APIService.shared.finalizarFormulario(id: id)
-                        }
-                    )
+                            backDestination: Question11View(),
+                            nextDestination: ResumoView(),
+                            canProceed: isFormValid,
+                            onNext: {}
+                        )
 
                 }
                 .padding()
@@ -47,6 +42,11 @@ struct Question12View: View {
         }
         .navigationBarHidden(true)
     }
+    
+    // MARK: - Lógica de Validação
+        private var isFormValid: Bool {
+            return !estado.q12_diagnosticadoComAutismo.isEmpty
+        }
     
     // MARK: - Componentes reutilizáveis (copiados aqui para clareza)
     

@@ -2,12 +2,6 @@ import SwiftUI
 
 struct Question5View: View {
     @EnvironmentObject var estado: FormularioState
-    /*
-    @State private var possuiConjugeOuCompanheiro: String = ""
-    @State private var vivemEmCompanhia: String = ""
-    @State private var nomeConjugeCompanheiro: String = ""
-    @State private var tipoUniao: String = ""
-    */
      
     let opcoesSimNao = ["Sim", "Não"]
     let opcoesTipoUniao = [
@@ -31,67 +25,54 @@ struct Question5View: View {
                         .padding(.leading, 7.5)
                     
                     // Bloco: Possui Cônjuge ou Companheiro
-<<<<<<< HEAD
-                    blocoRadio(titulo: "POSSUI CÔNJUGE OU COMPANHEIRO:", selecao: $estado.q5_possuiConjugeOuCompanheiro, opcoes: opcoesSimNao)
-                    
-                    // Bloco: Vivem em companhia de Cônjuge ou Companheiro
-                    blocoRadio(titulo: "VIVEM EM COMPANHIA DE CÔNJUGE OU COMPANHEIRO:", selecao: $estado.q5_vivemEmCompanhia, opcoes: opcoesSimNao)
-                    
-                    // Bloco: Nome do Cônjuge/Companheiro(a)
-                    blocoCampoTexto(titulo: "NOME DO CÔNJUGE/COMPANHEIRO(A)", texto: $estado.q5_nomeConjugeCompanheiro, placeholder: "Insira o nome:")
-                    
-                    // Bloco: Tipo da União
-                    blocoRadio(titulo: "TIPO DA UNIÃO:", selecao: $estado.q5_tipoUniao, opcoes: opcoesTipoUniao)
-=======
-                    blocoRadio(titulo: "POSSUI CÔNJUGE OU COMPANHEIRO:", selecao: $possuiConjugeOuCompanheiro, opcoes: opcoesSimNao)
-                        .onChange(of: possuiConjugeOuCompanheiro) { newValue in
-                            // Limpa os campos abaixo caso o usuário mude a resposta para "Não"
-                            if newValue == "Não" {
-                                vivemEmCompanhia = ""
-                                nomeConjugeCompanheiro = ""
-                                tipoUniao = ""
-                            }
+                    blocoRadio(
+                        titulo: "POSSUI CÔNJUGE OU COMPANHEIRO:",
+                        selecao: $estado.q5_possuiConjugeOuCompanheiro,
+                        opcoes: opcoesSimNao
+                    )
+                    .onChange(of: estado.q5_possuiConjugeOuCompanheiro) { newValue in
+                        // Limpa os campos abaixo caso o usuário mude a resposta para "Não"
+                        if newValue == "Não" {
+                            estado.q5_vivemEmCompanhia = ""
+                            estado.q5_nomeConjugeCompanheiro = ""
+                            estado.q5_tipoUniao = ""
                         }
+                    }
                     
                     // Condicional: Só exibe os blocos seguintes se a resposta for "Sim"
-                    if possuiConjugeOuCompanheiro == "Sim" {
+                    if estado.q5_possuiConjugeOuCompanheiro == "Sim" {
                         // Bloco: Vivem em companhia de Cônjuge ou Companheiro
-                        blocoRadio(titulo: "VIVEM EM COMPANHIA DE CÔNJUGE OU COMPANHEIRO:", selecao: $vivemEmCompanhia, opcoes: opcoesSimNao)
+                        blocoRadio(
+                            titulo: "VIVEM EM COMPANHIA DE CÔNJUGE OU COMPANHEIRO:",
+                            selecao: $estado.q5_vivemEmCompanhia,
+                            opcoes: opcoesSimNao
+                        )
                         
                         // Bloco: Nome do Cônjuge/Companheiro(a)
-                        blocoCampoTexto(titulo: "NOME DO CÔNJUGE/COMPANHEIRO(A)", texto: $nomeConjugeCompanheiro, placeholder: "Insira o nome:")
+                        blocoCampoTexto(
+                            titulo: "NOME DO CÔNJUGE/COMPANHEIRO(A)",
+                            texto: $estado.q5_nomeConjugeCompanheiro,
+                            placeholder: "Insira o nome:"
+                        )
                         
                         // Bloco: Tipo da União
-                        blocoRadio(titulo: "TIPO DA UNIÃO:", selecao: $tipoUniao, opcoes: opcoesTipoUniao)
+                        blocoRadio(
+                            titulo: "TIPO DA UNIÃO:",
+                            selecao: $estado.q5_tipoUniao,
+                            opcoes: opcoesTipoUniao
+                        )
                     }
->>>>>>> main
                     
                     // Botões de navegação
                     FormNavigationButtonsRows(
                         backDestination: Question4View(),
                         nextDestination: Question6View(),
-<<<<<<< HEAD
-                        canProceed: !estado.q5_possuiConjugeOuCompanheiro.isEmpty &&
-                                    !estado.q5_vivemEmCompanhia.isEmpty &&
-                                    !estado.q5_nomeConjugeCompanheiro.isEmpty &&
-                                    !estado.q5_tipoUniao.isEmpty,
-=======
                         canProceed: isFormValid, // Usando a variável computada para manter o código limpo
->>>>>>> main
-                        onNext: {
-                            guard let id = FormularioManager.shared.formularioId else { return }
-                            APIService.shared.enviarNupcialidade(
-                                id: id,
-                                possuiConjuge: estado.q5_possuiConjugeOuCompanheiro,
-                                vivemEmCompanhia: estado.q5_vivemEmCompanhia,
-                                nomeConjuge: estado.q5_nomeConjugeCompanheiro,
-                                tipoUniao: estado.q5_tipoUniao
-                            )
-                        }
+                        onNext: {}
                     )
                 }
                 .padding()
-                .animation(.easeInOut, value: possuiConjugeOuCompanheiro) // Adiciona uma transição suave ao mostrar/esconder campos
+                .animation(.easeInOut, value: estado.q5_possuiConjugeOuCompanheiro) // Adiciona uma transição suave ao mostrar/esconder campos
             }
         }
         .navigationBarHidden(true)
@@ -99,15 +80,15 @@ struct Question5View: View {
     
     // MARK: - Lógica de Validação
     private var isFormValid: Bool {
-        if possuiConjugeOuCompanheiro.isEmpty {
+        if estado.q5_possuiConjugeOuCompanheiro.isEmpty {
             return false
-        } else if possuiConjugeOuCompanheiro == "Não" {
+        } else if estado.q5_possuiConjugeOuCompanheiro == "Não" {
             return true // Pode avançar se marcou "Não"
         } else {
             // Se marcou "Sim", todos os outros campos são obrigatórios
-            return !vivemEmCompanhia.isEmpty &&
-                   !nomeConjugeCompanheiro.isEmpty &&
-                   !tipoUniao.isEmpty
+            return !estado.q5_vivemEmCompanhia.isEmpty &&
+                   !estado.q5_nomeConjugeCompanheiro.isEmpty &&
+                   !estado.q5_tipoUniao.isEmpty
         }
     }
     

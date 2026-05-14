@@ -105,17 +105,7 @@ struct Question1View: View {
                             !estado.q1_numero.isEmpty &&
                             !estado.q1_especieSelecionada.isEmpty &&
                             !estado.q1_tipoSelecionado.isEmpty,
-                        onNext: {
-                            guard let id = FormularioManager.shared.formularioId else { return }
-                            APIService.shared.enviarDomicilio(
-                                id: id,
-                                rua: estado.q1_ruaSelecionada,
-                                numero: estado.q1_numero,
-                                complemento: estado.q1_complemento,
-                                especie: estado.q1_especieSelecionada,
-                                tipo: estado.q1_tipoSelecionado
-                            )
-                        }
+                        onNext: {}
                     )
                 }
                 .padding()

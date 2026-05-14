@@ -92,17 +92,7 @@ struct Question10View: View {
                         backDestination: Question9View(),
                         nextDestination: Question11View(),
                         canProceed: isFormValid,
-                        onNext: {
-                            guard let id = FormularioManager.shared.formularioId else { return }
-                            APIService.shared.enviarDeslocamento(
-                                id: id,
-                                algumMoradorTrabalha: estado.q10_algumMoradorTrabalha,
-                                municipio: estado.q10_municipioPaisTrabalho,
-                                retorna3Dias: estado.q10_retornaTrabalho3DiasMais,
-                                tempoMinutos: Int(estado.q10_tempoDeslocamento),
-                                meioTransporte: estado.q10_meioTransporte
-                            )
-                        }
+                        onNext: {}
                     )
                 }
                 .padding()

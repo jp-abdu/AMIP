@@ -44,10 +44,7 @@ struct Question4View: View {
                         backDestination: Question3View(),
                         nextDestination: Question5View(),
                         canProceed: !estado.q4_respostaSelecionada.isEmpty,
-                        onNext: {
-                            guard let id = FormularioManager.shared.formularioId else { return }
-                            APIService.shared.enviarRegistroCivil(id: id, registro: estado.q4_respostaSelecionada)
-                        }
+                        onNext: {}
                     )
 
                 }
