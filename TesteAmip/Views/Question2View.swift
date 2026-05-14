@@ -67,9 +67,11 @@ struct Question2View: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color(red: 218/255, green: 249/255, blue: 254/255))
                     .cornerRadius(20)
-                    // Atualiza a quantidade de DatePickers com base no número digitado
+                    // NOVO: Atualiza a quantidade de DatePickers com base no número digitado
                     .onChange(of: estado.q2_numeroMoradores) { newValue in
                         let total = Int(newValue) ?? 1
+                        // Subtraímos 1 assumindo que o total inclui o entrevistado.
+                        // Ex: Se moram 3, criará 2 campos extras. Se a regra for diferente, mude para: let qtdAdicionais = total
                         let qtdAdicionais = max(0, total - 1)
                         
                         if estado.q2_datasAdicionais.count < qtdAdicionais {
@@ -145,7 +147,7 @@ struct Question2View: View {
                     .background(Color(red: 218/255, green: 249/255, blue: 254/255))
                     .cornerRadius(20)
                     
-                    // Renderiza os DatePickers para os moradores adicionais
+                    // NOVO: Renderiza os DatePickers para os moradores adicionais
                     if estado.q2_datasAdicionais.count > 0 {
                         VStack(alignment: .leading, spacing: 16) {
                             Text("Data de nascimento dos outros moradores:")
@@ -174,7 +176,7 @@ struct Question2View: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(Color(red: 218/255, green: 249/255, blue: 254/255))
                         .cornerRadius(20)
-                        .animation(.easeInOut, value: estado.q2_datasAdicionais.count)
+                        .animation(.easeInOut, value: estado.q2_datasAdicionais.count) // Transição suave ao adicionar/remover
                     }
                     
                     VStack(alignment: .leading, spacing: 16) {
@@ -213,7 +215,7 @@ struct Question2View: View {
                         onNext: {
                             guard let id = FormularioManager.shared.formularioId else { return }
 
-                            // Converte os Dates gerados na UI para Strings no formato dd/MM/yyyy
+                            // NOVO: Converte os Dates gerados na UI para Strings no formato dd/MM/yyyy
                             estado.q2_datasNascimentoMoradores = estado.q2_datasAdicionais.map { dateFormatter.string(from: $0) }
 
                             // Monta o array com todas as datas (incluindo a do responsável)

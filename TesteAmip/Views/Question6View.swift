@@ -2,15 +2,6 @@ import SwiftUI
 
 struct Question6View: View {
     @EnvironmentObject var estado: FormularioState
-    /*
-    @State private var trabalhouRemunerado = ""
-    @State private var quantidadeTrabalhos = ""
-    @State private var ocupacao = ""
-    @State private var atividadePrincipal = ""
-    @State private var carteiraAssinada = ""
-    @State private var possuiCNPJ = ""
-    @State private var faixaRendimento = ""
-     */
 
     let opcoesSimNao = ["Sim", "Não"]
     let opcoesQuantidadeTrabalhos = ["1", "2", "3 ou mais"]
@@ -28,90 +19,117 @@ struct Question6View: View {
     
     var body: some View {
         VStack(spacing: 0){
-            HeaderView()
+            HeaderView() // Assumindo que HeaderView já está definida
         
-        
-        ScrollView {
-            
-            VStack(spacing: 20) {
+            ScrollView {
+                VStack(spacing: 20) {
                     
-                
-                Text("6. TRABALHO E RENDIMENTO")
-                    .font(.system(size: 23))
-                    .bold()
-                    .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.leading, 7.5)
+                    Text("6. TRABALHO E RENDIMENTO")
+                        .font(.system(size: 23))
+                        .bold()
+                        .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.leading, 7.5)
 
-                // Pergunta 1
-                FormSectionView(title: "TRABALHOU OU ESTAGIOU EM ALGUMA ATIVIDADE REMUNERADA EM DINHEIRO?") {
-                    RadioGroupView(options: opcoesSimNao, selected: $estado.q6_trabalhouRemunerado)
-                }
-
-                // Pergunta 2
-                FormSectionView(title: "QUANTOS TRABALHOS TINHA NOS ÚLTIMOS MESES?") {
-                    RadioGroupView(options: opcoesQuantidadeTrabalhos, selected: $estado.q6_quantidadeTrabalhos)
-                }
-
-                // Pergunta 3
-                FormSectionView(title: "QUAL ERA A OCUPAÇÃO, CARGO OU FUNÇÃO QUE TINHA NESSE TRABALHO?") {
-                    LabeledTextFieldView(title: "Ex: CEO, Funcionário, etc...", text: $estado.q6_ocupacao)
-                }
-
-                // Pergunta 4
-                FormSectionView(title: "QUAL ERA A PRINCIPAL ATIVIDADE DO NEGÓCIO OU EMPRESA EM QUE TINHA ESSE TRABALHO?") {
-                    LabeledTextFieldView(title: "Ex: Vendas, Gerenciamento, etc...", text: $estado.q6_atividadePrincipal)
-                }
-
-                // Pergunta 5
-                FormSectionView(title: "NESSE TRABALHO TINHA CARTEIRA DE TRABALHO ASSINADA?") {
-                    RadioGroupView(options: opcoesSimNao, selected: $estado.q6_carteiraAssinada)
-                }
-
-                // Pergunta 6
-                FormSectionView(title: "ESSE NEGÓCIO OU EMPRESA ERA REGISTRADO NO CADASTRO NACIONAL DE PESSOA JURÍDICA - CNPJ?") {
-                    RadioGroupView(options: opcoesSimNao, selected: $estado.q6_possuiCNPJ)
-                }
-
-                // Pergunta 7
-                FormSectionView(title: "FAIXA DE RENDIMENTO DO DOMICÍLIO") {
-                    RadioGroupView(options: faixasDeRendimento, selected: $estado.q6_faixaRendimento)
-                }
-                
-                // Botão de próxima
-                FormNavigationButtonsRows(
-                    backDestination: Question5View(),
-                    nextDestination: Question7View(),
-                    canProceed: !estado.q6_trabalhouRemunerado.isEmpty &&
-                                !estado.q6_quantidadeTrabalhos.isEmpty &&
-                                !estado.q6_ocupacao.isEmpty &&
-                                !estado.q6_atividadePrincipal.isEmpty &&
-                                !estado.q6_carteiraAssinada.isEmpty &&
-                                !estado.q6_possuiCNPJ.isEmpty &&
-                                !estado.q6_faixaRendimento.isEmpty,
-                    onNext: {
-                        guard let id = FormularioManager.shared.formularioId else { return }
-                        APIService.shared.enviarTrabalho(
-                            id: id,
-                            trabalhouRemunerado: estado.q6_trabalhouRemunerado,
-                            quantidadeTrabalhos: estado.q6_quantidadeTrabalhos,
-                            ocupacao: estado.q6_ocupacao,
-                            atividadePrincipal: estado.q6_atividadePrincipal,
-                            carteiraAssinada: estado.q6_carteiraAssinada,
-                            possuiCNPJ: estado.q6_possuiCNPJ,
-                            faixaRendimento: estado.q6_faixaRendimento
-                        )
+                    // Pergunta 1
+                    FormSectionView(title: "TRABALHOU OU ESTAGIOU EM ALGUMA ATIVIDADE REMUNERADA EM DINHEIRO?") {
+                        RadioGroupView(options: opcoesSimNao, selected: $estado.q6_trabalhouRemunerado)
                     }
-                )
+                    .onChange(of: estado.q6_trabalhouRemunerado) { newValue in
+                        // Limpa os dados de trabalho caso o usuário mude a resposta para "Não"
+                        if newValue == "Não" {
+                            estado.q6_quantidadeTrabalhos = ""
+                            estado.q6_ocupacao = ""
+                            estado.q6_atividadePrincipal = ""
+                            estado.q6_carteiraAssinada = ""
+                            estado.q6_possuiCNPJ = ""
+                        }
+                    }
 
+                    // Condicional: Exibe as perguntas de 2 a 6 apenas se trabalhou
+                    if estado.q6_trabalhouRemunerado == "Sim" {
+                        // Pergunta 2
+                        FormSectionView(title: "QUANTOS TRABALHOS TINHA NOS ÚLTIMOS MESES?") {
+                            RadioGroupView(options: opcoesQuantidadeTrabalhos, selected: $estado.q6_quantidadeTrabalhos)
+                        }
+
+                        // Pergunta 3
+                        FormSectionView(title: "QUAL ERA A OCUPAÇÃO, CARGO OU FUNÇÃO QUE TINHA NESSE TRABALHO?") {
+                            LabeledTextFieldView(title: "Ex: CEO, Funcionário, etc...", text: $estado.q6_ocupacao)
+                        }
+
+                        // Pergunta 4
+                        FormSectionView(title: "QUAL ERA A PRINCIPAL ATIVIDADE DO NEGÓCIO OU EMPRESA EM QUE TINHA ESSE TRABALHO?") {
+                            LabeledTextFieldView(title: "Ex: Vendas, Gerenciamento, etc...", text: $estado.q6_atividadePrincipal)
+                        }
+
+                        // Pergunta 5
+                        FormSectionView(title: "NESSE TRABALHO TINHA CARTEIRA DE TRABALHO ASSINADA?") {
+                            RadioGroupView(options: opcoesSimNao, selected: $estado.q6_carteiraAssinada)
+                        }
+
+                        // Pergunta 6
+                        FormSectionView(title: "ESSE NEGÓCIO OU EMPRESA ERA REGISTRADO NO CADASTRO NACIONAL DE PESSOA JURÍDICA - CNPJ?") {
+                            RadioGroupView(options: opcoesSimNao, selected: $estado.q6_possuiCNPJ)
+                        }
+                    }
+
+                    // Pergunta 7 - Sempre exibida (independente se trabalhou ou não)
+                    FormSectionView(title: "FAIXA DE RENDIMENTO DO DOMICÍLIO") {
+                        RadioGroupView(options: faixasDeRendimento, selected: $estado.q6_faixaRendimento)
+                    }
+                    
+                    // Botão de próxima
+                    FormNavigationButtonsRows(
+                        backDestination: Question5View(),
+                        nextDestination: Question7View(),
+                        canProceed: isFormValid, // Usando a variável computada
+                        onNext: {
+                            guard let id = FormularioManager.shared.formularioId else { return }
+                            APIService.shared.enviarTrabalho(
+                                id: id,
+                                trabalhouRemunerado: estado.q6_trabalhouRemunerado,
+                                quantidadeTrabalhos: estado.q6_quantidadeTrabalhos,
+                                ocupacao: estado.q6_ocupacao,
+                                atividadePrincipal: estado.q6_atividadePrincipal,
+                                carteiraAssinada: estado.q6_carteiraAssinada,
+                                possuiCNPJ: estado.q6_possuiCNPJ,
+                                faixaRendimento: estado.q6_faixaRendimento
+                            )
+                        }
+                    )
+
+                }
+                .padding()
+                .animation(.easeInOut, value: estado.q6_trabalhouRemunerado) // Transição suave ao expandir/recolher
             }
-            .padding()
-            .navigationBarHidden(true)
+        }
+        .navigationBarHidden(true)
+    }
+    
+    // MARK: - Lógica de Validação
+    private var isFormValid: Bool {
+        // A faixa de rendimento e a pergunta inicial são sempre obrigatórias
+        if estado.q6_trabalhouRemunerado.isEmpty || estado.q6_faixaRendimento.isEmpty {
+            return false
+        }
+        
+        // Se respondeu "Não" para trabalho, e já preencheu a renda (verificado acima), pode avançar
+        if estado.q6_trabalhouRemunerado == "Não" {
+            return true
+        } else {
+            // Se respondeu "Sim", todas as perguntas de trabalho são obrigatórias
+            return !estado.q6_quantidadeTrabalhos.isEmpty &&
+                   !estado.q6_ocupacao.isEmpty &&
+                   !estado.q6_atividadePrincipal.isEmpty &&
+                   !estado.q6_carteiraAssinada.isEmpty &&
+                   !estado.q6_possuiCNPJ.isEmpty
         }
     }
 }
-}
-    
+
+// MARK: - Componentes Reutilizáveis
+
 struct FormSectionView<Content: View>: View {
     let title: String
     let content: Content
@@ -135,8 +153,6 @@ struct FormSectionView<Content: View>: View {
         .cornerRadius(20)
     }
 }
-import SwiftUI
-
 
 struct LabeledTextFieldView: View {
     let title: String
@@ -203,5 +219,3 @@ struct Question6View_Previews: PreviewProvider {
         }
     }
 }
-
-
