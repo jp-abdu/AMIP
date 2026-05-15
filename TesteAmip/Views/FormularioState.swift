@@ -1,6 +1,9 @@
 import SwiftUI
 
 class FormularioState: ObservableObject {
+    
+    // MARK: - Controle de Navegação Global
+        @Published var isFormularioAtivo: Bool = false
 
     // MARK: - Q1: Identificação de Domicílio
     @Published var q1_ruaSelecionada: String = ""

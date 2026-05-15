@@ -21,7 +21,12 @@ struct FormularioEnviadoView: View {
                 .bold()
                 .multilineTextAlignment(.center)
             
-            NavigationLink(destination: HomeView()) {
+            // Substitua o NavigationLink por este Button
+                        Button(action: {
+                            FormularioManager.shared.formularioId = nil
+                            // Volta para a raiz!
+                            estado.isFormularioAtivo = false
+                        }) {
                             Text("Voltar à Home")
                                 .padding()
                                 .frame(maxWidth: .infinity)

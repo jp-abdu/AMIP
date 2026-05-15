@@ -3,6 +3,9 @@ import SwiftUI
 struct FormNavigationButtonsRows<BackDestination: View, NextDestination: View>: View {
     @EnvironmentObject var estado: FormularioState
     
+    // NOVO: Essa variável é a responsável por fechar a tela atual e voltar de verdade!
+    @Environment(\.presentationMode) var presentationMode
+    
     let backDestination: BackDestination
     let nextDestination: NextDestination
     let backLabel: String
@@ -12,9 +15,8 @@ struct FormNavigationButtonsRows<BackDestination: View, NextDestination: View>: 
 
     @State private var navigate = false
     @State private var showingAlert = false
-    @State private var showingCancelDialog = false // Controla o novo menu de opções
-    @State private var navigateToHome = false
-    @State private var processandoSaida = false // Controla o carregamento visual
+    @State private var showingCancelDialog = false
+    @State private var processandoSaida = false
 
     init(
         backLabel: String = "Voltar",
@@ -37,8 +39,16 @@ struct FormNavigationButtonsRows<BackDestination: View, NextDestination: View>: 
         VStack(alignment: .leading, spacing: 5) {
             HStack(spacing: 10) {
                 
-                // BOTÃO VOLTAR
-                NavigationLink(destination: backDestination) {
+                // NOVO BOTÃO VOLTAR (Agora volta de verdade, apagando a tela atual da memória)
+                Button(action: {
+                    if BackDestination.self == HomeView.self {
+                        // Se for a Q1 (destino seria Home), abre o menu de saída em vez de voltar
+                        showingCancelDialog = true
+                    } else {
+                        // Se for da Q2 em diante, apenas destrói a tela atual (volta 1 passo)
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }) {
                     Text(backLabel)
                         .frame(maxWidth: .infinity)
                         .padding()
@@ -49,14 +59,9 @@ struct FormNavigationButtonsRows<BackDestination: View, NextDestination: View>: 
                         )
                         .cornerRadius(10)
                 }
-                .disabled(processandoSaida) // Trava o botão durante o carregamento
-                .simultaneousGesture(TapGesture().onEnded {
-                    // Se o botão voltar apontar para a Home (Question1), aciona o menu
-                    if BackDestination.self == HomeView.self {
-                        showingCancelDialog = true
-                    }
-                })
+                .disabled(processandoSaida)
 
+                // Este NavigationLink (Avançar) continua igual, ele empurra para frente corretamente
                 NavigationLink(destination: nextDestination, isActive: $navigate) {
                     EmptyView()
                 }
@@ -77,7 +82,7 @@ struct FormNavigationButtonsRows<BackDestination: View, NextDestination: View>: 
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
-                .disabled(processandoSaida) // Trava o botão durante o carregamento
+                .disabled(processandoSaida)
                 .alert(isPresented: $showingAlert) {
                     Alert(
                         title: Text("Atenção"),
@@ -85,11 +90,6 @@ struct FormNavigationButtonsRows<BackDestination: View, NextDestination: View>: 
                         dismissButton: .default(Text("OK"))
                     )
                 }
-            }
-
-            // Link oculto para disparar a volta para a Home via código
-            NavigationLink(destination: HomeView(), isActive: $navigateToHome) {
-                EmptyView()
             }
 
             // BOTÃO RETORNAR AO HOME / CARREGAMENTO
@@ -114,13 +114,14 @@ struct FormNavigationButtonsRows<BackDestination: View, NextDestination: View>: 
             }
         }
         .padding(.horizontal)
-        // MENU INFERIOR DE CANCELAMENTO (Confirmation Dialog suporta 3 opções nativas)
+        
+        // MENU INFERIOR DE CANCELAMENTO
         .confirmationDialog("Opções de Cancelamento", isPresented: $showingCancelDialog, titleVisibility: .visible) {
             
             Button("Salvar incompleto e Sair") {
                 processandoSaida = true
-                // Atraso de 0.5s para a animação do menu terminar antes de bater na API
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                // Deixa a animação do menu terminar antes de acionar a API
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     estado.salvarFormularioNoBackend(finalizar: false) { _ in
                         encerrarENavegar()
                     }
@@ -128,10 +129,13 @@ struct FormNavigationButtonsRows<BackDestination: View, NextDestination: View>: 
             }
             
             Button("Sair sem salvar (Descartar)", role: .destructive) {
-                navigateToHome = true
+                processandoSaida = true
+                // Aumentamos o atraso para 0.8s para garantir que o menu desapareceu 100%
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    encerrarENavegar()
+                }
             }
             
-            // Botão Cancelar: apenas fecha o menu e deixa o usuário na página
             Button("Cancelar", role: .cancel) { }
             
         } message: {
@@ -139,16 +143,11 @@ struct FormNavigationButtonsRows<BackDestination: View, NextDestination: View>: 
         }
     }
     
-    //encerrar navegacao
+    // Função auxiliar super limpa (Pop To Root)
     private func encerrarENavegar() {
-            // Removemos o ID
-            FormularioManager.shared.formularioId = nil
-            
-            // IMPORTANTE: Damos um tempo maior (0.6s) para o menu (ConfirmationDialog)
-            // sumir completamente. Isso evita o erro de "existing transition" no terminal.
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-                self.processandoSaida = false
-                self.navigateToHome = true
-            }
-        }
+        FormularioManager.shared.formularioId = nil
+        processandoSaida = false
+        // Desliga a raiz, voltando para a Home instantaneamente sem "empilhar" telas
+        estado.isFormularioAtivo = false
+    }
 }
