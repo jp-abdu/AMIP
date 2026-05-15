@@ -153,74 +153,102 @@ class FormularioState: ObservableObject {
         q12_diagnosticadoComAutismo = ""
     }
     
-    // MARK: - Envio em Lote (Batch Send)
-    func enviarDadosParaAPI(formularioId: Int) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd/MM/yyyy"
-        
-        // Q1 - Domicílio
-        if !q1_ruaSelecionada.isEmpty && q1_ruaSelecionada != "Selecione a Rua" {
-            APIService.shared.enviarDomicilio(id: formularioId, rua: q1_ruaSelecionada, numero: q1_numero, complemento: q1_complemento, especie: q1_especieSelecionada, tipo: q1_tipoSelecionado)
-        }
-        
-        // Q2 - Moradores
-        if !q2_nomeCompleto.isEmpty {
-            var todasAsDatas = [formatter.string(from: q2_dataNascimento)]
-            todasAsDatas.append(contentsOf: q2_datasAdicionais.map { formatter.string(from: $0) })
+    // MARK: - Envio em Lote (Batch Send) com Validação Estrita
+        func enviarDadosParaAPI(formularioId: Int) {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "dd/MM/yyyy"
             
-            APIService.shared.enviarMoradores(id: formularioId, numeroMoradores: Int(q2_numeroMoradores) ?? 1, nomeCompleto: q2_nomeCompleto, dataNascimento: formatter.string(from: q2_dataNascimento), datasNascimentoMoradores: todasAsDatas, sexo: q2_sexoSelecionado, parentesco: q2_parentescoSelecionado, situacaoDomicilio: q2_situacaoDomicilioSelecionada)
+            // Q1 - Domicílio
+            if !q1_ruaSelecionada.isEmpty && q1_ruaSelecionada != "Selecione a Rua" {
+                APIService.shared.enviarDomicilio(id: formularioId, rua: q1_ruaSelecionada, numero: q1_numero, complemento: q1_complemento, especie: q1_especieSelecionada, tipo: q1_tipoSelecionado)
+            }
+            
+            // Q2 - Moradores
+            if !q2_nomeCompleto.isEmpty || !q2_numeroMoradores.isEmpty {
+                // Só formata a data de nascimento principal se ela realmente foi selecionada
+                let dataNasc = q2_dataNascimentoSelecionada ? formatter.string(from: q2_dataNascimento) : ""
+                
+                var todasAsDatas: [String] = []
+                if q2_dataNascimentoSelecionada { todasAsDatas.append(dataNasc) }
+                todasAsDatas.append(contentsOf: q2_datasAdicionais.map { formatter.string(from: $0) })
+                
+                APIService.shared.enviarMoradores(id: formularioId, numeroMoradores: Int(q2_numeroMoradores) ?? 1, nomeCompleto: q2_nomeCompleto, dataNascimento: dataNasc, datasNascimentoMoradores: todasAsDatas, sexo: q2_sexoSelecionado, parentesco: q2_parentescoSelecionado, situacaoDomicilio: q2_situacaoDomicilioSelecionada)
+            }
+            
+            // Q3 - Características
+            if !q3_quantidadeComodos.isEmpty {
+                APIService.shared.enviarCaracteristicas(id: formularioId, comodos: q3_quantidadeComodos, dormitorios: q3_quantidadeDormitorios, banheirosCom: q3_quantidadeBanheirosCom, banheirosSem: q3_quantidadeBanheirosSem, internet: q3_acessoInternet, maquinaLavar: q3_possuiMaquinaLavar)
+            }
+            
+            // Q4 - Registro Civil
+            if !q4_respostaSelecionada.isEmpty {
+                APIService.shared.enviarRegistroCivil(id: formularioId, registro: q4_respostaSelecionada)
+            }
+            
+            // Q5 - Nupcialidade
+            if !q5_possuiConjugeOuCompanheiro.isEmpty {
+                let vivem = q5_possuiConjugeOuCompanheiro == "Sim" ? q5_vivemEmCompanhia : ""
+                let nome = q5_possuiConjugeOuCompanheiro == "Sim" ? q5_nomeConjugeCompanheiro : ""
+                let tipo = q5_possuiConjugeOuCompanheiro == "Sim" ? q5_tipoUniao : ""
+                
+                APIService.shared.enviarNupcialidade(id: formularioId, possuiConjuge: q5_possuiConjugeOuCompanheiro, vivemEmCompanhia: vivem, nomeConjuge: nome, tipoUniao: tipo)
+            }
+            
+            // Q6 - Trabalho
+            if !q6_trabalhouRemunerado.isEmpty {
+                let qtd = q6_trabalhouRemunerado == "Sim" ? q6_quantidadeTrabalhos : ""
+                let ocup = q6_trabalhouRemunerado == "Sim" ? q6_ocupacao : ""
+                let ativ = q6_trabalhouRemunerado == "Sim" ? q6_atividadePrincipal : ""
+                let cart = q6_trabalhouRemunerado == "Sim" ? q6_carteiraAssinada : ""
+                let cnpj = q6_trabalhouRemunerado == "Sim" ? q6_possuiCNPJ : ""
+                
+                APIService.shared.enviarTrabalho(id: formularioId, trabalhouRemunerado: q6_trabalhouRemunerado, quantidadeTrabalhos: qtd, ocupacao: ocup, atividadePrincipal: ativ, carteiraAssinada: cart, possuiCNPJ: cnpj, faixaRendimento: q6_faixaRendimento)
+            }
+            
+            // Q7 - Mortalidade
+            if !q7_faleceuPessoa.isEmpty {
+                // Limpa dados fantasmas caso o usuário tenha marcado "Não"
+                let dataFalecimento = q7_faleceuPessoa == "Sim" ? formatter.string(from: q7_dataFalecimento) : nil
+                let nome = q7_faleceuPessoa == "Sim" ? q7_nomeCompletoFalecido : nil
+                let idade = q7_faleceuPessoa == "Sim" ? q7_idadeFalecido : nil
+                let sexo = q7_faleceuPessoa == "Sim" ? q7_sexoFalecido : nil
+                
+                APIService.shared.enviarMortalidade(id: formularioId, houveFalecimento: q7_faleceuPessoa, dataFalecimento: dataFalecimento, nomeFalecido: nome, idadeFalecido: idade, sexoFalecido: sexo)
+            }
+            
+            // Q8 - Deficiência
+            if !q8_dificuldadeEnxergar.isEmpty {
+                APIService.shared.enviarDeficiencia(id: formularioId, enxergar: q8_dificuldadeEnxergar, ouvir: q8_dificuldadeOuvir, andar: q8_dificuldadeAndar)
+            }
+            
+            // Q9 - Educação
+            if q9_pessoasSabemLerEscrever != "Selecione" && !q9_pessoasSabemLerEscrever.isEmpty {
+                let curso = (q9_frequentaEscolaCreche == "Sim" || q9_frequentaEscolaCreche == "Não, mas já frequentou") ? q9_cursoQueFrequenta : ""
+                let concluiu = (q9_frequentaEscolaCreche == "Sim" || q9_frequentaEscolaCreche == "Não, mas já frequentou") ? q9_concluiuOutroSuperior : ""
+                
+                APIService.shared.enviarEducacao(id: formularioId, pessoasSabemLer: q9_pessoasSabemLerEscrever, frequentaEscola: q9_frequentaEscolaCreche, cursoFrequentado: curso, concluiuSuperior: concluiu)
+            }
+            
+            // Q10 - Deslocamento
+            if !q10_algumMoradorTrabalha.isEmpty {
+                let mun = q10_algumMoradorTrabalha == "Sim" ? q10_municipioPaisTrabalho : ""
+                let ret = q10_algumMoradorTrabalha == "Sim" ? q10_retornaTrabalho3DiasMais : ""
+                let min = q10_algumMoradorTrabalha == "Sim" ? Int(q10_tempoDeslocamento) : 0
+                let trans = q10_algumMoradorTrabalha == "Sim" ? q10_meioTransporte : ""
+                
+                APIService.shared.enviarDeslocamento(id: formularioId, algumMoradorTrabalha: q10_algumMoradorTrabalha, municipio: mun, retorna3Dias: ret, tempoMinutos: min, meioTransporte: trans)
+            }
+            
+            // Q11 - Religião
+            if !q11_religiaoSelecionada.isEmpty {
+                APIService.shared.enviarReligiao(id: formularioId, religiao: q11_religiaoSelecionada)
+            }
+            
+            // Q12 - Autismo
+            if !q12_diagnosticadoComAutismo.isEmpty {
+                APIService.shared.enviarAutismo(id: formularioId, diagnosticado: q12_diagnosticadoComAutismo)
+            }
         }
-        
-        // Q3 - Características
-        if !q3_quantidadeComodos.isEmpty {
-            APIService.shared.enviarCaracteristicas(id: formularioId, comodos: q3_quantidadeComodos, dormitorios: q3_quantidadeDormitorios, banheirosCom: q3_quantidadeBanheirosCom, banheirosSem: q3_quantidadeBanheirosSem, internet: q3_acessoInternet, maquinaLavar: q3_possuiMaquinaLavar)
-        }
-        
-        // Q4 - Registro Civil
-        if !q4_respostaSelecionada.isEmpty {
-            APIService.shared.enviarRegistroCivil(id: formularioId, registro: q4_respostaSelecionada)
-        }
-        
-        // Q5 - Nupcialidade
-        if !q5_possuiConjugeOuCompanheiro.isEmpty {
-            APIService.shared.enviarNupcialidade(id: formularioId, possuiConjuge: q5_possuiConjugeOuCompanheiro, vivemEmCompanhia: q5_vivemEmCompanhia, nomeConjuge: q5_nomeConjugeCompanheiro, tipoUniao: q5_tipoUniao)
-        }
-        
-        // Q6 - Trabalho
-        if !q6_trabalhouRemunerado.isEmpty {
-            APIService.shared.enviarTrabalho(id: formularioId, trabalhouRemunerado: q6_trabalhouRemunerado, quantidadeTrabalhos: q6_quantidadeTrabalhos, ocupacao: q6_ocupacao, atividadePrincipal: q6_atividadePrincipal, carteiraAssinada: q6_carteiraAssinada, possuiCNPJ: q6_possuiCNPJ, faixaRendimento: q6_faixaRendimento)
-        }
-        
-        // Q7 - Mortalidade
-        if !q7_faleceuPessoa.isEmpty {
-            APIService.shared.enviarMortalidade(id: formularioId, houveFalecimento: q7_faleceuPessoa, dataFalecimento: formatter.string(from: q7_dataFalecimento), nomeFalecido: q7_nomeCompletoFalecido, idadeFalecido: q7_idadeFalecido, sexoFalecido: q7_sexoFalecido)
-        }
-        
-        // Q8 - Deficiência
-        if !q8_dificuldadeEnxergar.isEmpty {
-            APIService.shared.enviarDeficiencia(id: formularioId, enxergar: q8_dificuldadeEnxergar, ouvir: q8_dificuldadeOuvir, andar: q8_dificuldadeAndar)
-        }
-        
-        // Q9 - Educação
-        if q9_pessoasSabemLerEscrever != "Selecione" && !q9_pessoasSabemLerEscrever.isEmpty {
-            APIService.shared.enviarEducacao(id: formularioId, pessoasSabemLer: q9_pessoasSabemLerEscrever, frequentaEscola: q9_frequentaEscolaCreche, cursoFrequentado: q9_cursoQueFrequenta, concluiuSuperior: q9_concluiuOutroSuperior)
-        }
-        
-        // Q10 - Deslocamento
-        if !q10_algumMoradorTrabalha.isEmpty {
-            APIService.shared.enviarDeslocamento(id: formularioId, algumMoradorTrabalha: q10_algumMoradorTrabalha, municipio: q10_municipioPaisTrabalho, retorna3Dias: q10_retornaTrabalho3DiasMais, tempoMinutos: Int(q10_tempoDeslocamento), meioTransporte: q10_meioTransporte)
-        }
-        
-        // Q11 - Religião
-        if !q11_religiaoSelecionada.isEmpty {
-            APIService.shared.enviarReligiao(id: formularioId, religiao: q11_religiaoSelecionada)
-        }
-        
-        // Q12 - Autismo
-        if !q12_diagnosticadoComAutismo.isEmpty {
-            APIService.shared.enviarAutismo(id: formularioId, diagnosticado: q12_diagnosticadoComAutismo)
-        }
-    }
     
     // MARK: - Orquestrador de Envio (Mestre)
     func salvarFormularioNoBackend(finalizar: Bool, completion: @escaping (Bool) -> Void) {

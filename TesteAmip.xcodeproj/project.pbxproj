@@ -174,7 +174,6 @@
 			isa = PBXGroup;
 			children = (
 				C10DDAC82DCA9D2F003AC6FE /* SplashView.swift */,
-				C10DDAD12DCAA0D2003AC6FE /* FormularioEnviadoView.swift */,
 				CDD488092FB5FDF10011A89B /* FormularioManager.swift */,
 				CDD4880E2FB60D1A0011A89B /* FormularioState.swift */,
 				CDD488082FB5FDF10011A89B /* APIService.swift */,
@@ -193,6 +192,7 @@
 				51B329B52DDCEE28001F0726 /* Question11View.swift */,
 				51B329B72DDCEE33001F0726 /* Question12View.swift */,
 				CDB20E8D2FB66E5E00F6DA7F /* ResumoView.swift */,
+				C10DDAD12DCAA0D2003AC6FE /* FormularioEnviadoView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";

@@ -12,8 +12,9 @@ struct FormNavigationButtonsRows<BackDestination: View, NextDestination: View>: 
 
     @State private var navigate = false
     @State private var showingAlert = false
-    @State private var showingCancelAlert = false // NOVO: Controle do alerta de cancelamento
-    @State private var navigateToHome = false // NOVO: Controle de navegação para a Home
+    @State private var showingCancelDialog = false // Controla o novo menu de opções
+    @State private var navigateToHome = false
+    @State private var processandoSaida = false // Controla o carregamento visual
 
     init(
         backLabel: String = "Voltar",
@@ -48,10 +49,11 @@ struct FormNavigationButtonsRows<BackDestination: View, NextDestination: View>: 
                         )
                         .cornerRadius(10)
                 }
+                .disabled(processandoSaida) // Trava o botão durante o carregamento
                 .simultaneousGesture(TapGesture().onEnded {
-                    // Se estiver voltando para a Home (na Q1), mostra o alerta em vez de limpar direto
+                    // Se o botão voltar apontar para a Home (Question1), aciona o menu
                     if BackDestination.self == HomeView.self {
-                        showingCancelAlert = true
+                        showingCancelDialog = true
                     }
                 })
 
@@ -75,6 +77,7 @@ struct FormNavigationButtonsRows<BackDestination: View, NextDestination: View>: 
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
+                .disabled(processandoSaida) // Trava o botão durante o carregamento
                 .alert(isPresented: $showingAlert) {
                     Alert(
                         title: Text("Atenção"),
@@ -89,41 +92,63 @@ struct FormNavigationButtonsRows<BackDestination: View, NextDestination: View>: 
                 EmptyView()
             }
 
-            // BOTÃO RETORNAR AO HOME (CANCELA O FORMULÁRIO)
-            Button(action: {
-                showingCancelAlert = true
-            }) {
-                Text("Retornar ao Home")
-                    .foregroundColor(Color(red: 0/255, green: 104/255, blue: 150/255))
-                    .underline(true, color: Color(red: 0/255, green: 104/255, blue: 150/255))
+            // BOTÃO RETORNAR AO HOME / CARREGAMENTO
+            if processandoSaida {
+                HStack {
+                    ProgressView()
+                        .padding(.trailing, 8)
+                    Text("Processando saída...")
+                        .foregroundColor(.gray)
+                }
+                .padding(.top, 8)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            } else {
+                Button(action: {
+                    showingCancelDialog = true
+                }) {
+                    Text("Retornar ao Home")
+                        .foregroundColor(Color(red: 0/255, green: 104/255, blue: 150/255))
+                        .underline(true, color: Color(red: 0/255, green: 104/255, blue: 150/255))
+                }
+                .padding(.top, 8)
             }
-            .alert(isPresented: $showingCancelAlert) {
-                            Alert(
-                                title: Text("Atenção"),
-                                message: Text("Tem certeza que deseja sair? Você pode salvar os dados coletados até aqui como um formulário incompleto."),
-                                primaryButton: .default(Text("Salvar e Sair")) {
-                                    // 1. Envia tudo que o usuário já respondeu
-                                    if let id = FormularioManager.shared.formularioId {
-                                        estado.enviarDadosParaAPI(formularioId: id)
-                                    }
-                                    
-                                    // 2. Limpa memória e volta pro menu
-                                    encerrarENavegar()
-                                },
-                                secondaryButton: .destructive(Text("Sair sem Salvar")) {
-                                    // Limpa a memória ignorando os dados e vai para a Home
-                                    encerrarENavegar()
-                                }
-                            )
-                        }
         }
         .padding(.horizontal)
+        // MENU INFERIOR DE CANCELAMENTO (Confirmation Dialog suporta 3 opções nativas)
+        .confirmationDialog("Opções de Cancelamento", isPresented: $showingCancelDialog, titleVisibility: .visible) {
+            
+            Button("Salvar incompleto e Sair") {
+                processandoSaida = true
+                // Atraso de 0.5s para a animação do menu terminar antes de bater na API
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    estado.salvarFormularioNoBackend(finalizar: false) { _ in
+                        encerrarENavegar()
+                    }
+                }
+            }
+            
+            Button("Sair sem salvar (Descartar)", role: .destructive) {
+                navigateToHome = true
+            }
+            
+            // Botão Cancelar: apenas fecha o menu e deixa o usuário na página
+            Button("Cancelar", role: .cancel) { }
+            
+        } message: {
+            Text("O formulário ainda não foi concluído. O que deseja fazer?")
+        }
     }
     
-    // Função auxiliar para evitar repetição de código
+    //encerrar navegacao
     private func encerrarENavegar() {
-        estado.limparFormulario()
-        FormularioManager.shared.formularioId = nil
-        navigateToHome = true
-    }
+            // Removemos o ID
+            FormularioManager.shared.formularioId = nil
+            
+            // IMPORTANTE: Damos um tempo maior (0.6s) para o menu (ConfirmationDialog)
+            // sumir completamente. Isso evita o erro de "existing transition" no terminal.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                self.processandoSaida = false
+                self.navigateToHome = true
+            }
+        }
 }

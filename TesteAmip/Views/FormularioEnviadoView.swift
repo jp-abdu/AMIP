@@ -22,15 +22,18 @@ struct FormularioEnviadoView: View {
                 .multilineTextAlignment(.center)
             
             NavigationLink(destination: HomeView()) {
-                Text("Voltar à Home")
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                    .padding(.horizontal)
-            }
-            // 2. A mágica acontece aqui: ao tocar no link, limpamos a memória e o ID
+                            Text("Voltar à Home")
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                                .padding(.horizontal)
+                        }
+                        .simultaneousGesture(TapGesture().onEnded {
+                            // Apenas resetamos o ID. A limpeza das variáveis ocorrerá ao clicar em "Iniciar" na Home
+                            FormularioManager.shared.formularioId = nil
+                        })            // 2. A mágica acontece aqui: ao tocar no link, limpamos a memória e o ID
             .simultaneousGesture(TapGesture().onEnded {
                 estado.limparFormulario()
                 FormularioManager.shared.formularioId = nil

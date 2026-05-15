@@ -44,7 +44,7 @@ struct Question7View: View {
                         .padding(.leading, 7.5)
                     
                     blocoRadio(
-                        titulo: "FALECEU ALGUMA PESSOA QUE MORAVA COM VOCÊ(S) NOS ULTIMOS DOIS ANOS(OU DESDE O ULTIMO SENSO)?",
+                        titulo: "FALECEU ALGUMA PESSOA QUE MORAVA COM VOCÊ(S) NOS ÚLTIMOS DOIS ANOS(OU DESDE O ÚLTIMO SENSO)?",
                         selecao: $estado.q7_faleceuPessoa,
                         opcoes: opcoesSimNao
                     )
