@@ -14,7 +14,8 @@ struct Question6View: View {
         "5.001,00 a 10.000,00",
         "10.001,00 a 20.000,00",
         "20.001,00 a 100.000,00",
-        "100.001 ou mais"
+        "100.001 ou mais",
+        "Prefiro não dizer",
     ]
     
     var body: some View {
@@ -32,7 +33,7 @@ struct Question6View: View {
                         .padding(.leading, 7.5)
 
                     // Pergunta 1
-                    FormSectionView(title: "TRABALHOU OU ESTAGIOU EM ALGUMA ATIVIDADE REMUNERADA EM DINHEIRO?") {
+                    FormSectionView(title: "Trabalhou ou estagiou em alguma atividade remunerada em dinheiro?") {
                         RadioGroupView(options: opcoesSimNao, selected: $estado.q6_trabalhouRemunerado)
                     }
                     .onChange(of: estado.q6_trabalhouRemunerado) { newValue in
@@ -49,33 +50,33 @@ struct Question6View: View {
                     // Condicional: Exibe as perguntas de 2 a 6 apenas se trabalhou
                     if estado.q6_trabalhouRemunerado == "Sim" {
                         // Pergunta 2
-                        FormSectionView(title: "QUANTOS TRABALHOS TINHA NOS ÚLTIMOS MESES?") {
+                        FormSectionView(title: "Quantos trabalhos tinha nos últimos meses?") {
                             RadioGroupView(options: opcoesQuantidadeTrabalhos, selected: $estado.q6_quantidadeTrabalhos)
                         }
 
                         // Pergunta 3
-                        FormSectionView(title: "QUAL ERA A OCUPAÇÃO, CARGO OU FUNÇÃO QUE TINHA NESSE TRABALHO?") {
+                        FormSectionView(title: "Qual era a ocupação, cargo ou função que tinha nesse trabalho?") {
                             LabeledTextFieldView(title: "Ex: CEO, Funcionário, etc...", text: $estado.q6_ocupacao)
                         }
 
                         // Pergunta 4
-                        FormSectionView(title: "QUAL ERA A PRINCIPAL ATIVIDADE DO NEGÓCIO OU EMPRESA EM QUE TINHA ESSE TRABALHO?") {
+                        FormSectionView(title: "Qual era a principal atividade do negócio ou empresa em que tinha esse trabalho?") {
                             LabeledTextFieldView(title: "Ex: Vendas, Gerenciamento, etc...", text: $estado.q6_atividadePrincipal)
                         }
 
                         // Pergunta 5
-                        FormSectionView(title: "NESSE TRABALHO TINHA CARTEIRA DE TRABALHO ASSINADA?") {
+                        FormSectionView(title: "Nesse trabalho tinha carteira de trabalho assinada?") {
                             RadioGroupView(options: opcoesSimNao, selected: $estado.q6_carteiraAssinada)
                         }
 
                         // Pergunta 6
-                        FormSectionView(title: "ESSE NEGÓCIO OU EMPRESA ERA REGISTRADO NO CADASTRO NACIONAL DE PESSOA JURÍDICA - CNPJ?") {
+                        FormSectionView(title: "Esse negócio ou empresa era registrado no cadastro nacional de pessoa jurídica - cnpj?") {
                             RadioGroupView(options: opcoesSimNao, selected: $estado.q6_possuiCNPJ)
                         }
                     }
 
                     // Pergunta 7 - Sempre exibida (independente se trabalhou ou não)
-                    FormSectionView(title: "FAIXA DE RENDIMENTO DO DOMICÍLIO") {
+                    FormSectionView(title: "Faixa de rendimento do domicílio") {
                         RadioGroupView(options: faixasDeRendimento, selected: $estado.q6_faixaRendimento)
                     }
                     

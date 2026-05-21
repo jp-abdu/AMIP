@@ -27,7 +27,7 @@ struct ResumoView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.leading, 7.5)
                         
-                        Text("Revise os dados antes de enviar. Ocultei as perguntas que não precisaram ser respondidas.")
+                        Text("Revise os dados antes de enviar.")
                             .font(.subheadline)
                             .foregroundColor(.gray)
                             .frame(maxWidth: .infinity, alignment: .leading)

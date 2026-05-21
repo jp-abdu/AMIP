@@ -38,7 +38,7 @@ struct Question10View: View {
                     
                     // Bloco: Algum morador da residência trabalha?
                     blocoRadio(
-                        titulo: "ALGUM MORADOR DA RESIDÊNCIA TRABALHA?",
+                        titulo: "Algum morador da residência trabalha?",
                         selecao: $estado.q10_algumMoradorTrabalha,
                         opcoes: opcoesSimNao
                     )
@@ -58,21 +58,21 @@ struct Question10View: View {
                         
                         // Bloco: Em que município ou país estrangeiro trabalha?
                         blocoRadio(
-                            titulo: "EM QUE MUNICÍPIO OU PAÍS ESTRANGEIRO TRABALHA?",
+                            titulo: "Em que município ou país estrangeiro trabalha?",
                             selecao: $estado.q10_municipioPaisTrabalho,
                             opcoes: opcoesMunicipioPais
                         )
                         
                         // Bloco: Retorna do trabalho para casa 3 dias ou mais na semana?
                         blocoRadio(
-                            titulo: "RETORNA DO TRABALHO PARA CASA 3 DIAS OU MAIS NA SEMANA? (Considerar a semana de 7 dias)",
+                            titulo: "Retorna do trabalho para casa 3 dias ou mais na semana? (Considerar a semana de 7 dias)",
                             selecao: $estado.q10_retornaTrabalho3DiasMais,
                             opcoes: opcoesSimNao
                         )
                         
                         // Bloco: Quanto tempo leva de sua casa até o local de trabalho normalmente?
                         blocoSlider(
-                            titulo: "QUANTO TEMPO LEVA DE SUA CASA ATÉ O LOCAL DE TRABALHO NORMALMENTE? (Minutos)",
+                            titulo: "Quanto tempo leva de sua casa até o local de trabalho normalmente? (Minutos)",
                             valor: $estado.q10_tempoDeslocamento,
                             rotuloMin: "0",
                             rotuloMax: "100+",
@@ -81,7 +81,7 @@ struct Question10View: View {
                         
                         // Bloco: Qual o principal meio de transporte utilizado para chegar ao local de trabalho?
                         blocoRadio(
-                            titulo: "QUAL O PRINCIPAL MEIO DE TRANSPORTE UTILIZADO PARA CHEGAR AO LOCAL DE TRABALHO?",
+                            titulo: "Qual o principal meio de transporte utilizado para chegar ao local de trabalho?",
                             selecao: $estado.q10_meioTransporte,
                             opcoes: opcoesMeioTransporte
                         )

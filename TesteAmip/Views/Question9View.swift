@@ -42,14 +42,14 @@ struct Question9View: View {
                     
                     // Bloco: Quantas pessoas sabem ler e escrever? (Sempre visível)
                     blocoPergunta(
-                        titulo: "QUANTAS PESSOAS SABEM LER E ESCREVER?",
+                        titulo: "Quantas pessoas sabem ler e escrever?",
                         selecao: $estado.q9_pessoasSabemLerEscrever,
                         opcoesPicker: opcoesNumericas // Passando as opções para o Picker
                     )
                     
                     // Bloco: FREQUENTA ESCOLA OU CRECHE?
                     blocoRadio(
-                        titulo: "FREQUENTA ESCOLA OU CRECHE? (Escola inclui desde cursos da pré-escola até o doutorado)",
+                        titulo: "Frequenta escola ou creche? (Escola inclui desde cursos da pré-escola até o doutorado)",
                         selecao: $estado.q9_frequentaEscolaCreche,
                         opcoes: opcoesFrequentaEscola
                     )
@@ -66,14 +66,14 @@ struct Question9View: View {
                         
                         // Bloco: QUAL É O CURSO QUE FREQUENTA?
                         blocoRadio(
-                            titulo: "QUAL É O CURSO QUE FREQUENTA/FREQUENTOU?",
+                            titulo: "Qual é o curso que frequenta/frequentou?",
                             selecao: $estado.q9_cursoQueFrequenta,
                             opcoes: opcoesCursoFrequenta
                         )
                         
                         // Bloco: JÁ CONCLUIU ALGUM OUTRO CURSO SUPERIOR DE GRADUAÇÃO?
                         blocoRadio(
-                            titulo: "JÁ CONCLUIU ALGUM OUTRO CURSO SUPERIOR DE GRADUAÇÃO?",
+                            titulo: "Já concluiu algum outro curso superior de graduação?",
                             selecao: $estado.q9_concluiuOutroSuperior,
                             opcoes: opcoesSimNao
                         )

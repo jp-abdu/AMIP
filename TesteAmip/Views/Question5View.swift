@@ -26,7 +26,7 @@ struct Question5View: View {
                     
                     // Bloco: Possui Cônjuge ou Companheiro
                     blocoRadio(
-                        titulo: "POSSUI CÔNJUGE OU COMPANHEIRO:",
+                        titulo: "Possui cônjuge ou companheiro:",
                         selecao: $estado.q5_possuiConjugeOuCompanheiro,
                         opcoes: opcoesSimNao
                     )
@@ -43,21 +43,21 @@ struct Question5View: View {
                     if estado.q5_possuiConjugeOuCompanheiro == "Sim" {
                         // Bloco: Vivem em companhia de Cônjuge ou Companheiro
                         blocoRadio(
-                            titulo: "VIVEM EM COMPANHIA DE CÔNJUGE OU COMPANHEIRO:",
+                            titulo: "Vivem em companhia de cônjuge ou companheiro:",
                             selecao: $estado.q5_vivemEmCompanhia,
                             opcoes: opcoesSimNao
                         )
                         
                         // Bloco: Nome do Cônjuge/Companheiro(a)
                         blocoCampoTexto(
-                            titulo: "NOME DO CÔNJUGE/COMPANHEIRO(A)",
+                            titulo: "Nome do cônjuge/companheiro(a)",
                             texto: $estado.q5_nomeConjugeCompanheiro,
                             placeholder: "Insira o nome:"
                         )
                         
                         // Bloco: Tipo da União
                         blocoRadio(
-                            titulo: "TIPO DA UNIÃO:",
+                            titulo: "Tipo da união:",
                             selecao: $estado.q5_tipoUniao,
                             opcoes: opcoesTipoUniao
                         )

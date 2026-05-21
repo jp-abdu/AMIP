@@ -31,7 +31,7 @@ struct Question11View: View {
                     
                     // Bloco: Qual sua religião ou culto?
                     blocoRadio(
-                        titulo: "QUAL SUA RELIGIÃO OU CULTO?",
+                        titulo: "Qual sua religião ou culto?",
                         selecao: $estado.q11_religiaoSelecionada,
                         opcoes: opcoesReligiao
                     )

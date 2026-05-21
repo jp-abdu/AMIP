@@ -44,7 +44,7 @@ struct Question7View: View {
                         .padding(.leading, 7.5)
                     
                     blocoRadio(
-                        titulo: "FALECEU ALGUMA PESSOA QUE MORAVA COM VOCÊ(S) NOS ÚLTIMOS DOIS ANOS(OU DESDE O ÚLTIMO SENSO)?",
+                        titulo: "Faleceu alguma pessoa que morava com você(s) nos últimos dois anos(ou desde o último senso)?",
                         selecao: $estado.q7_faleceuPessoa,
                         opcoes: opcoesSimNao
                     )
@@ -52,7 +52,7 @@ struct Question7View: View {
                     // Campos extras só aparecem se houve falecimento
                     if estado.q7_faleceuPessoa == "Sim" {
                         blocoDatePicker(
-                            titulo: "DATA DO FALECIMENTO:",
+                            titulo: "Data do falecimento:",
                             data: $estado.q7_dataFalecimento
                         )
                         
@@ -135,7 +135,7 @@ struct Question7View: View {
     @ViewBuilder
     func blocoDadosFalecido(nome: Binding<String>, idade: Binding<String>, sexo: Binding<String>) -> some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("NOME COMPLETO, IDADE E SEXO:")
+            Text("Nome completo, idade e sexo:")
                 .font(.headline)
                 .foregroundColor(Color(red: 0.0, green: 0.3, blue: 0.3))
                 .fixedSize(horizontal: false, vertical: true)

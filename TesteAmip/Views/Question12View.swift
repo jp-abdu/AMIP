@@ -23,7 +23,7 @@ struct Question12View: View {
                     
                     // Bloco: Algum morador já foi diagnosticado(a) com autismo por algum profissional de saúde?
                     blocoRadio(
-                        titulo: "ALGUM MORADOR JÁ FOI DIAGNOSTICADO(A) COM AUTISMO POR ALGUM PROFISSIONAL DE SAÚDE?",
+                        titulo: "Algum morador já foi diagnosticado(a) com autismo por algum profissional de saúde?",
                         selecao: $estado.q12_diagnosticadoComAutismo,
                         opcoes: opcoesSimNao
                     )

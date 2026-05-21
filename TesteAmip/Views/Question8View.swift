@@ -30,21 +30,21 @@ struct Question8View: View {
                     
                     // Bloco: Dificuldade de enxergar
                     blocoRadio(
-                        titulo: "TEM DIFICULDADE PERMANENTE DE ENXERGAR MESMO USANDO ÓCULOS OU LENTES DE CONTATO?",
+                        titulo: "Tem dificuldade permanente de enxergar mesmo usando óculos ou lentes de contato?",
                         selecao: $estado.q8_dificuldadeEnxergar,
                         opcoes: opcoesDificuldade
                     )
                     
                     // Bloco: Dificuldade de ouvir
                     blocoRadio(
-                        titulo: "TEM DIFICULDADE PERMANENTE PARA OUVIR, MESMO USANDO APARELHOS AUDITIVOS?",
+                        titulo: "Tem dificuldade permanente para ouvir, mesmo usando aparelhos auditivos?",
                         selecao: $estado.q8_dificuldadeOuvir,
                         opcoes: opcoesDificuldade
                     )
                     
                     // Bloco: Dificuldade de andar ou subir degraus
                     blocoRadio(
-                        titulo: "TEM DIFICULDADE PERMANENTE PARA ANDAR OU SUBIR DEGRAUS, MESMO USANDO PRÓTESE, BENGALA OU APARELHO DE AUXÍLIO?",
+                        titulo: "Tem dificuldade permanente para andar ou subir degraus, mesmo usando prótese, bengala ou aparelho de auxílio?",
                         selecao: $estado.q8_dificuldadeAndar,
                         opcoes: opcoesDificuldade
                     )
